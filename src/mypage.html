@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイライブラリ (専門版) - 私の図書館</title>
+    <style>
+        /* CSSは前回の回答と同じものを流用するため、ここでは省略します。 */
+        /* このHTMLを動作させるには、前回の回答の<style>タグ内のCSSが必要です。 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+        :root {
+            --dark-blue: #0A192F;
+            --light-gray-bg: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text-color: #333;
+            --sub-text-color: #777;
+            --accent-gradient: linear-gradient(90deg, #FF851B, #0074D9); /* 少し専門的な印象のグラデーションに変更 */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--light-gray-bg);
+            color: var(--text-color);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "header header"
+                "sidebar main";
+            gap: 30px;
+        }
+        .profile-header {
+            grid-area: header;
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .profile-header img.avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            border: 3px solid transparent;
+            background: var(--accent-gradient);
+        }
+        .profile-header h1 {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .profile-stats {
+            display: flex;
+            margin-left: auto;
+            gap: 30px;
+            text-align: center;
+        }
+        .stat-item .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: var(--sub-text-color);
+        }
+        .stats-sidebar {
+            grid-area: sidebar;
+        }
+        .stats-widget {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .stats-widget h3 {
+            margin-top: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .bar-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 150px;
+            border-left: 2px solid #eee;
+            border-bottom: 2px solid #eee;
+            padding-top: 10px;
+        }
+        .bar {
+            width: 20px;
+            background: var(--accent-gradient);
+            position: relative;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease-out;
+        }
+        .bar:hover::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -25px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-blue);
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        .donut-chart {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border-radius: 50%;
+            background: conic-gradient( #0074D9 0% 40%, #2ECC40 40% 75%, #FF851B 75% 100% );
+            position: relative;
+        }
+        .donut-chart::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: var(--card-bg);
+            border-radius: 50%;
+        }
+        .main-library {
+            grid-area: main;
+        }
+        .currently-reading {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .currently-reading h2 {
+            margin: 0 0 20px 0;
+            font-size: 1.8rem;
+        }
+        .progress-book {
+            display: flex;
+            align-items: center;
+        }
+        .progress-book img {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+            background-color: #eee; /* 画像読み込み中の背景 */
+        }
+        .progress-details { width: 100%; }
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .progress-bar-fg {
+            width: 40%;
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 5px;
+        }
+        .bookshelf-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .filter-btn {
+            background: #ddd;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover { background: #ccc; }
+        .filter-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 700;
+        }
+        .bookshelf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        .book-card img.cover {
+            width: 100%;
+            height: 225px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        .book-info { padding: 10px; }
+        .book-info h4 {
+            font-size: 0.9rem; /* 専門書はタイトルが長いことがあるため少し調整 */
+            margin: 0 0 5px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .book-info p {
+            font-size: 0.8rem;
+            color: var(--sub-text-color);
+            margin: 0;
+        }
+        .rating { color: #FFC107; font-size: 0.9rem; }
+        @media (max-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-areas: "header" "sidebar" "main";
+            }
+        }
+        @media (max-width: 600px) {
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-stats { margin-left: 0; margin-top: 20px; }
+            .bookshelf-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .book-card img.cover { height: 180px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header class="profile-header">
+            <img src="https://www.u-tokyo.ac.jp/excellent-researchers/member/img/mem_09.jpg" alt="User Avatar" class="avatar">
+            <div>
+                <h1>Yohei Sawada</h1>
+                <p class="sub-text-color">東京大学　准教授</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="number">121</div>
+                    <div class="label">総文献数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">15</div>
+                    <div class="label">今年の文献数</div>
+                </div>
+            </div>
+        </header>
+
+        <aside class="stats-sidebar">
+            <div class="stats-widget">
+                <h3>月間読書グラフ (2025年)</h3>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 60%;" data-value="3"></div>
+                    <div class="bar" style="height: 40%;" data-value="2"></div>
+                    <div class="bar" style="height: 80%;" data-value="4"></div>
+                    <div class="bar" style="height: 100%;" data-value="5"></div>
+                    <div class="bar" style="height: 60%;" data-value="3"></div>
+                    <div class="bar" style="height: 40%;" data-value="2"></div>
+                </div>
+            </div>
+            <div class="stats-widget">
+                <h3>専門分野</h3>
+                <div class="donut-chart"></div>
+                </div>
+        </aside>
+
+        <main class="main-library">
+
+            <section class="currently-reading">
+                <h2>今読んでいる文献</h2>
+                <div class="progress-book">
+                    <img src="https://images-na.ssl-images-amazon.com/images/I/4163g1b4wYL._SX331_BO1,204,203,200_.jpg" alt="Book cover of Atmospheric Modeling, Data Assimilation and Predictability">
+                    <div class="progress-details">
+                        <h4>Atmospheric Modeling, Data Assimilation and Predictability</h4>
+                        <p>Eugenia Kalnay</p>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fg"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bookshelf">
+                <div class="bookshelf-controls">
+                     <button class="filter-btn active">すべて</button>
+                    <button class="filter-btn">データ同化</button>
+                    <button class="filter-btn">気象力学</button>
+                    <button class="filter-btn">数値予報</button>
+                </div>
+                <div class="bookshelf-grid">
+                    <div class="book-card">
+                        <img src="https://m.media-amazon.com/images/I/71oD415Jk8L._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>Data Assimilation</h4>
+                            <p>Geir Evensen</p>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://m.media-amazon.com/images/I/51IY619A-WL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>An Introduction to Dynamic Meteorology</h4>
+                            <p>James R. Holton</p>
+                             <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://m.media-amazon.com/images/I/71uF-cWpZDL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>Atmospheric and Oceanic Fluid Dynamics</h4>
+                            <p>Geoffrey K. Vallis</p>
+                            <div class="rating">★★★★☆</div>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://images.booksense.com/images/936/231/9780521231936.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>Numerical Weather and Climate Prediction</h4>
+                            <p>Thomas T. Warner</p>
+                            <div class="rating">★★★★☆</div>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://m.media-amazon.com/images/I/91a9e52QpWL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>Nonlinear Dynamics and Chaos</h4>
+                            <p>Steven H. Strogatz</p>
+                            <div class="rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <img src="https://m.media-amazon.com/images/I/61y8B2z-hCL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover">
+                        <div class="book-info">
+                            <h4>A First Course in Atmospheric Radiation</h4>
+                            <p>Grant W. Petty</p>
+                            <div class="rating">★★★★☆</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+</body>
+</html>

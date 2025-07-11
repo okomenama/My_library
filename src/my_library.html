@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>私の図書館 - あなたの知性を、ポートフォリオに。</title>
+    <style>
+        /* --- Google Fontsの読み込み --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap');
+
+        /* --- 基本デザインとカラー設定 --- */
+        :root {
+            --dark-blue: #0A192F; /* 知性を感じさせる深い紺色 */
+            --off-white: #F8F9FA; /* 明るく清潔なオフホワイト */
+            --text-color: #333;
+            --light-text: #EFEFEF;
+            /* ✨ 鮮やかなアクセントグラデーション */
+            --accent-gradient: linear-gradient(90deg, #FF851B, #E100FF); 
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--off-white);
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        /* --- セクション共通のスタイル --- */
+        section {
+            padding: 80px 20px;
+            text-align: center;
+            overflow: hidden; /* アニメーションのため */
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        /* ✨ キーワードをグラデーションで彩るクラス */
+        .text-gradient {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* --- ① ファーストビュー --- */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            background: #121212; /* 単色背景 */
+            position: relative;
+        }
+        /* ✨ 動きのあるグラデーション背景 */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #FF851B, #E100FF, #0074D9);
+            background-size: 400% 400%;
+            opacity: 0.6;
+            z-index: 1;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .hero-section h1 {
+            font-size: 4rem;
+            margin: 0 0 20px 0;
+        }
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            opacity: 0.9;
+        }
+
+        /* ✨ 「映える」CTAボタン */
+        .cta-button {
+            display: inline-block;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(225, 0, 255, 0.4);
+        }
+
+        /* --- ② 問題提起セクション (グラスモーフィズム) --- */
+        .problem-section {
+            background-color: var(--dark-blue);
+            color: var(--light-text);
+        }
+        .problem-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .problem-card {
+            /* ✨ グラスモーフィズム（すりガラス）効果 */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 300px;
+            transition: transform 0.3s;
+        }
+        .problem-card:hover {
+             transform: translateY(-10px);
+        }
+        .problem-card h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 0;
+        }
+
+        /* --- ③ 解決策・サービス紹介セクション --- */
+        .feature-list {
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .feature-item {
+            max-width: 300px;
+        }
+        .feature-item .icon {
+            font-size: 3rem; /* アイコンサイズ */
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+             background-clip: text;
+             text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .feature-item h3 {
+            font-size: 1.6rem;
+        }
+
+        /* --- ページ読み込み時のアニメーション --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .problem-card, .feature-item {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0; /* 初期状態は非表示 */
+        }
+        /* アニメーションの遅延 */
+        .problem-card:nth-child(1) { animation-delay: 0.2s; }
+        .problem-card:nth-child(2) { animation-delay: 0.4s; }
+        .problem-card:nth-child(3) { animation-delay: 0.6s; }
+        
+        .feature-item:nth-child(1) { animation-delay: 0.2s; }
+        .feature-item:nth-child(2) { animation-delay: 0.4s; }
+        .feature-item:nth-child(3) { animation-delay: 0.6s; }
+
+    </style>
+</head>
+<body>
+
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>あなたの<span class="text-gradient">知性</span>を、ポートフォリオに。</h1>
+            <p>
+                読書履歴や学習歴を記録し、あなたの「知の資産」を可視化する。<br>
+                「私の図書館」は、図書館から始まる新しいキャリアのカタチを提案します。
+            </p>
+            <a href="#" class="cta-button">無料でポートフォリオを作成</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="problem-section">
+            <h2>その経歴書だけで、あなたの魅力は伝わっていますか？</h2>
+            <div class="problem-cards">
+                <div class="problem-card">
+                    <h3>見過ごされる潜在能力</h3>
+                    <p>職務経験やスキルだけでは、あなたの学習意欲や知的好奇心、専門性の深さは伝わりきらない。</p>
+                </div>
+                <div class="problem-card">
+                    <h3>"なんとなく"のミスマッチ</h3>
+                    <p>本当に価値観が合う企業や仲間と出会えていますか？表面的な情報だけでは本質的な相性はわからない。</p>
+                </div>
+                <div class="problem-card">
+                    <h3>埋もれていく学習の軌跡</h3>
+                    <p>これまで読んできた膨大な本や論文。その一つひとつが、あなたを創り上げた大切な資産のはず。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="solution-section">
+            <h2>「私の図書館」が、その<span class="text-gradient">すべて</span>を解決します。</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="icon">📚</div>
+                    <h3>1. 学習歴を「記録」する</h3>
+                    <p>全国の図書館や論文データベースと連携。あなたの読書・学習履歴を自動で記録し、一元管理します。</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">📊</div>
+                    <h3>2. 知の資産を「可視化」する</h3>
+                    <p>読んできた本を分野別にグラフ化し、あなたの興味関心の変遷を分析。自分でも知らない「知の個性」を発見できます。</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon">🚀</div>
+                    <h3>3. ポートフォリオとして「活用」する</h3>
+                    <p>記録した学習歴は「知のポートフォリオ」に。あなたのポテンシャルを客観的なデータで証明します。</p>
+                </div>
+            </div>
+        </section>
+        
+        </main>
+
+</body>
+</html>
