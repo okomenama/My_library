@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四のデジタル図書館マップ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0074D9; /* 東京大学のスクールカラーに近い青 */
+            --secondary-color: #2ECC40; /* アクセントカラー */
+            --background-light: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text-color: #333;
+            --heading-color: #0A192F;
+            --sub-text-color: #777;
+            --shadow-light: 0 4px 20px rgba(0,0,0,0.05);
+            --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+
+            /* JavaScriptから動的に設定されるRGB値のための変数 */
+            --primary-color-rgb: 0, 116, 217; /* --primary-colorのRGB値 (デフォルト) */
+            --secondary-color-rgb: 46, 204, 64; /* --secondary-colorのRGB値 (デフォルト) */
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--background-light), #e0e6ed); /* 微妙なグラデーション背景 */
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: flex-start;
+            align-items: center;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Global Header --- */
+        .global-header {
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 20px 0;
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            z-index: 20;
+        }
+        .global-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0;
+            letter-spacing: -1px;
+        }
+        .global-header p {
+            font-size: 0.95rem;
+            color: var(--sub-text-color);
+            margin-top: 5px;
+        }
+
+        /* --- Map Container --- */
+        .map-container {
+            position: relative;
+            width: 90vw;
+            height: calc(100vh - 120px);
+            max-width: 1400px;
+            max-height: 900px;
+            margin: 20px auto;
+            background: url('https://via.placeholder.com/1400x900/E8F5FF/D4EEFF?text=Tokyo+Knowledge+Network+Map') no-repeat center center / cover; /* 地図のベース背景をシンプルに */
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            animation: fadeInMap 1.5s ease-out forwards;
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- Point (Common Styles for all clickable points: Library and Hub) --- */
+        .point {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 10; /* SVG線より手前に */
+            cursor: pointer;
+        }
+
+        .point:hover {
+            transform: scale(1.08) translateY(-15px);
+            z-index: 15;
+            box-shadow: 0 10px 30px rgba(var(--primary-color-rgb), 0.3);
+        }
+
+        .point img {
+            width: 160px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .point:hover img {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+        }
+
+        .point .label {
+            background-color: rgba(255, 255, 255, 0.95);
+            color: var(--primary-color);
+            padding: 10px 18px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 15px;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .point:hover .label {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 6px 20px rgba(var(--primary-color-rgb), 0.3);
+        }
+
+        /* 各図書館の位置設定 (map-containerに対する相対的な位置) */
+        /* 正三角形の頂点として配置 */
+        #hongo-point { top: 20%; left: 50%; transform: translateX(-50%); } /* 上中央 */
+        #komaba-point { top: 80%; left: 20%; } /* 左下 */
+        #kashiwa-point { top: 80%; left: 80%; } /* 右下 */
+
+        /* デジタルハブ専用スタイル（既存の.pointと組み合わせ） */
+        .digital-hub-point {
+            top: 50%; /* 正三角形の重心に配置 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .digital-hub-point:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .digital-hub-point .hub-icon {
+            font-size: 4rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            animation: pulse 1.5s infinite alternate;
+        }
+        .digital-hub-point .label {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.8; }
+            to { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* --- Info Panel --- */
+        .info-panel {
+            position: absolute;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+            width: 350px;
+            max-height: 80%;
+            overflow-y: auto;
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: fadeInPanel 0.4s ease-out;
+        }
+
+        .info-panel.active {
+            display: flex;
+        }
+
+        .info-panel h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--background-light);
+            padding-bottom: 10px;
+        }
+
+        .info-panel p {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .info-panel .features-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        .info-panel .features-list li {
+            background-color: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        .info-panel .features-list li::before {
+            content: '✅';
+            margin-right: 8px;
+        }
+
+        .info-panel .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--sub-text-color);
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            transition: color 0.3s ease;
+        }
+        .info-panel .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .info-panel .access-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 25px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-panel .access-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* --- SVG Lines --- */
+        .map-svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* ポイントの下、マップ背景の上 */
+            pointer-events: none; /* SVGがクリックをブロックしないように */
+        }
+        .map-line {
+            stroke: rgba(var(--primary-color-rgb), 0.3); /* デフォルトの線の色 */
+            stroke-width: 3;
+            fill: none;
+            transition: stroke 0.5s ease, stroke-width 0.5s ease;
+            filter: drop-shadow(0 0 2px rgba(var(--primary-color-rgb), 0.1)); /* 線の影 */
+        }
+        /* アクティブな線のスタイル（JavaScriptでクラスを付与） */
+        .map-line.active {
+            stroke: url(#line-gradient); /* グラデーションストローク */
+            stroke-width: 5;
+            filter: drop-shadow(0 0 8px rgba(var(--primary-color-rgb), 0.7)); /* 強く光る影 */
+            animation: dashFlow 3s linear infinite; /* 点線が流れるアニメーション */
+        }
+
+        @keyframes dashFlow {
+            from { stroke-dashoffset: 0; }
+            to { stroke-dashoffset: 60; }
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInMap {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 900px) {
+            .global-header h1 { font-size: 2rem; }
+            .global-header p { font-size: 0.85rem; }
+            .map-container {
+                width: 95vw;
+                height: calc(100vh - 100px);
+                margin-top: 15px;
+            }
+            .point img { width: 120px; border-radius: 15px; }
+            .point .label { font-size: 0.85rem; padding: 8px 15px; margin-top: 10px; }
+
+            /* 各要素の位置設定を調整 */
+            #hongo-point { top: 15%; left: 50%; }
+            #komaba-point { top: 85%; left: 15%; }
+            #kashiwa-point { top: 85%; left: 85%; }
+            #digital-hub { top: 50%; left: 50%; }
+
+            .info-panel {
+                width: 300px;
+                padding: 25px;
+            }
+            .info-panel h3 { font-size: 1.6rem; }
+            .info-panel p { font-size: 0.85rem; }
+            .info-panel .features-list li { font-size: 0.8rem; }
+        }
+
+        @media (max-width: 600px) {
+            .global-header { padding: 15px 0; }
+            .global-header h1 { font-size: 1.8rem; }
+            .map-container {
+                width: 98vw;
+                height: calc(100vh - 80px);
+                margin-top: 10px;
+                border-radius: 10px;
+            }
+            .point img { width: 90px; border-radius: 10px; }
+            .point .label { font-size: 0.75rem; padding: 6px 12px; margin-top: 8px; }
+
+            /* 各要素の位置設定をさらに調整 */
+            #hongo-point { top: 10%; left: 50%; }
+            #komaba-point { top: 90%; left: 15%; }
+            #kashiwa-point { top: 90%; left: 85%; }
+            #digital-hub { top: 50%; left: 50%; }
+
+            .info-panel {
+                width: 90%;
+                max-height: 90%;
+                padding: 20px;
+            }
+            .info-panel h3 { font-size: 1.4rem; }
+            .info-panel .close-btn { font-size: 1.5rem; top: 10px; right: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="global-header">
+        <h1>第四のデジタル図書館マップ</h1>
+        <p>東京大学の知の拠点をデジタルで繋ぐ</p>
+    </header>
+
+    <div class="map-container">
+        <svg class="map-svg-overlay" viewBox="0 0 1400 900">
+            <defs>
+                <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="var(--primary-color)" />
+                    <stop offset="100%" stop-color="var(--secondary-color)" />
+                </linearGradient>
+            </defs>
+
+            <path id="svg-conn-hub-hongo" class="map-line"></path>
+            <path id="svg-conn-hub-komaba" class="map-line"></path>
+            <path id="svg-conn-hub-kashiwa" class="map-line"></path>
+
+            <path id="svg-conn-hongo-komaba" class="map-line"></path>
+            <path id="svg-conn-hongo-kashiwa" class="map-line"></path>
+            <path id="svg-conn-komaba-kashiwa" class="map-line"></path>
+        </svg>
+
+        <a href="javascript:void(0);" class="point" id="hongo-point" data-point-type="library" data-id="hongo">
+            <img src="https://via.placeholder.com/160x160/FFDDC1/FF8C00?text=Hongo+Library" alt="本郷図書館のイラスト">
+            <span class="label">本郷図書館</span>
+        </a>
+
+        <a href="javascript:void(0);" class="point" id="komaba-point" data-point-type="library" data-id="komaba">
+            <img src="https://via.placeholder.com/160x160/FFEBEB/FFC1C1?text=Komaba+Library" alt="駒場図書館のイラスト">
+            <span class="label">駒場図書館</span>
+        </a>
+
+        <a href="javascript:void(0);" class="point" id="kashiwa-point" data-point-type="library" data-id="kashiwa">
+            <img src="https://via.placeholder.com/160x160/D1E9FF/A3D4FF?text=Kashiwa+Library" alt="柏図書館のイラスト">
+            <span class="label">柏図書館</span>
+        </a>
+
+        <a href="javascript:void(0);" class="point digital-hub-point" id="digital-hub" data-point-type="hub" data-id="core">
+            <div class="hub-icon">🌐</div>
+            <span class="label">デジタル中核ハブ</span>
+        </a>
+
+        <div class="info-panel" id="library-info-panel">
+            <button class="close-btn">&times;</button>
+            <h3 id="panel-title"></h3>
+            <p id="panel-description"></p>
+            <ul class="features-list" id="panel-features">
+                </ul>
+            <a href="#" class="access-button" id="panel-access-button">詳細へアクセス</a>
+        </div>
+    </div>
+
+    <script>
+        // 各要素のデータ定義
+        const dataMap = {
+            library: {
+                hongo: {
+                    title: '本郷図書館',
+                    description: '歴史と伝統を誇る本郷キャンパスの中心図書館。人文・社会・自然科学の幅広い分野にわたる膨大な蔵書を誇り、研究者と学生の深い学びを支えます。貴重な古典籍から最新の学術雑誌まで、知の宝庫です。',
+                    features: ['貴重書コレクション', '研究個室利用', 'デジタルアーカイブ', 'レファレンスサービス'],
+                    link: '#hongo-digital-library'
+                },
+                komaba: {
+                    title: '駒場図書館',
+                    description: '教養教育の中心を担う駒場キャンパスの図書館。多様な学問分野の基礎を学ぶための資料が充実し、グループ学習スペースやメディアセンターなど、学生の主体的な学びを促すフレンドリーな環境が特徴です。',
+                    features: ['自学自習スペース', 'ラーニングコモンズ', '情報リテラシー教育', 'DVD・AV資料'],
+                    link: '#komaba-digital-library'
+                },
+                kashiwa: {
+                    title: '柏図書館',
+                    description: '最先端の研究拠点である柏キャンパスに位置する、未来志向の図書館。生命科学、環境科学、情報科学など、フロンティア分野の専門資料を豊富に取り揃え、国際的な研究活動を強力にサポートします。',
+                    features: ['電子ジャーナル特化', '研究データ管理支援', 'オープンアクセス促進', '共同研究スペース'],
+                    link: '#kashiwa-digital-library'
+                }
+            },
+            hub: {
+                core: {
+                    title: 'デジタル中核ハブ',
+                    description: '「第四のデジタル図書館」の心臓部。あなたの学習ポートフォリオ「私の図書館」や、AIによるパーソナル選書、オンライン学習コミュニティなど、生涯学習をサポートする最先端機能が集約されています。',
+                    features: ['マイライブラリ連携', 'AI選書・レコメンド', 'オンライン学習コミュニティ', '生涯学習パス提案', '統合検索プラットフォーム'],
+                    link: '#my-library-core'
+                }
+            }
+        };
+
+        const clickablePoints = document.querySelectorAll('.point'); // 全てのクリック可能な要素
+        const infoPanel = document.getElementById('library-info-panel');
+        const closeBtn = infoPanel.querySelector('.close-btn');
+        const panelTitle = document.getElementById('panel-title');
+        const panelDescription = document.getElementById('panel-description');
+        const panelFeatures = document.getElementById('panel-features');
+        const panelAccessButton = document.getElementById('panel-access-button');
+
+        // SVGライン要素の取得
+        const svgLines = {
+            hubHongo: document.getElementById('svg-conn-hub-hongo'),
+            hubKomaba: document.getElementById('svg-conn-hub-komaba'),
+            hubKashiwa: document.getElementById('svg-conn-hub-kashiwa'),
+            // 新しく追加された図書館間の線
+            hongoKomaba: document.getElementById('svg-conn-hongo-komaba'),
+            hongoKashiwa: document.getElementById('svg-conn-hongo-kashiwa'),
+            komabaKashiwa: document.getElementById('svg-conn-komaba-kashiwa')
+        };
+
+        // 各ポイントの中心座標を計算するヘルパー関数 (SVGの座標系に合わせる)
+        function getPointCenter(element) {
+            const rect = element.getBoundingClientRect();
+            const mapRect = document.querySelector('.map-container').getBoundingClientRect();
+            const centerX = (rect.left + rect.right) / 2 - mapRect.left;
+            const centerY = (rect.top + rect.bottom) / 2 - mapRect.top;
+
+            // map-containerの最大幅/高さ（1400x900）に正規化
+            const normalizedX = (centerX / mapRect.width) * 1400;
+            const normalizedY = (centerY / mapRect.height) * 900;
+            return { x: normalizedX, y: normalizedY };
+        }
+
+        // SVGパスを更新する関数
+        function updateSvgPaths() {
+            const hongoCenter = getPointCenter(document.getElementById('hongo-point'));
+            const komabaCenter = getPointCenter(document.getElementById('komaba-point'));
+            const kashiwaCenter = getPointCenter(document.getElementById('kashiwa-point'));
+            const hubCenter = getPointCenter(document.getElementById('digital-hub'));
+
+            // ハブと各図書館を結ぶ線
+            svgLines.hubHongo.setAttribute('d', `M${hubCenter.x} ${hubCenter.y} L${hongoCenter.x} ${hongoCenter.y}`);
+            svgLines.hubKomaba.setAttribute('d', `M${hubCenter.x} ${hubCenter.y} L${komabaCenter.x} ${komabaCenter.y}`);
+            svgLines.hubKashiwa.setAttribute('d', `M${hubCenter.x} ${hubCenter.y} L${kashiwaCenter.x} ${kashiwaCenter.y}`);
+
+            // ３つの図書館を結ぶ線
+            svgLines.hongoKomaba.setAttribute('d', `M${hongoCenter.x} ${hongoCenter.y} L${komabaCenter.x} ${komabaCenter.y}`);
+            svgLines.hongoKashiwa.setAttribute('d', `M${hongoCenter.x} ${hongoCenter.y} L${kashiwaCenter.x} ${kashiwaCenter.y}`);
+            svgLines.komabaKashiwa.setAttribute('d', `M${komabaCenter.x} ${komabaCenter.y} L${kashiwaCenter.x} ${kashiwaCenter.y}`);
+        }
+
+        // ウィンドウのリサイズ時にもパスを更新
+        window.addEventListener('resize', updateSvgPaths);
+        // DOMContentLoaded時にも更新
+        document.addEventListener('DOMContentLoaded', updateSvgPaths);
+
+
+        // HEX to RGB for dynamic CSS variables
+        function hexToRgb(hex) {
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 4) {
+                r = parseInt(hex[1] + hex[1], 16);
+                g = parseInt(hex[2] + hex[2], 16);
+                b = parseInt(hex[3] + hex[3], 16);
+            } else if (hex.length === 7) {
+                r = parseInt(hex.substring(1, 3), 16);
+                g = parseInt(hex.substring(3, 5), 16);
+                b = parseInt(hex.substring(5, 7), 16);
+            }
+            return `${r}, ${g}, ${b}`;
+        }
+
+        // Set initial primary/secondary color RGB for CSS variables
+        document.documentElement.style.setProperty('--primary-color-rgb', hexToRgb(getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim()));
+        document.documentElement.style.setProperty('--secondary-color-rgb', hexToRgb(getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim()));
+
+
+        clickablePoints.forEach(point => {
+            point.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pointType = point.dataset.pointType;
+                const pointId = point.dataset.id;
+                
+                const data = dataMap[pointType][pointId];
+
+                panelTitle.textContent = data.title;
+                panelDescription.textContent = data.description;
+                
+                panelFeatures.innerHTML = '';
+                data.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    panelFeatures.appendChild(li);
+                });
+                
+                panelAccessButton.href = data.link;
+                
+                infoPanel.classList.add('active');
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            infoPanel.classList.remove('active');
+        });
+
+        // Click outside panel to close it
+        document.body.addEventListener('click', (e) => {
+            if (infoPanel.classList.contains('active') && !infoPanel.contains(e.target) && !e.target.closest('.point')) {
+                infoPanel.classList.remove('active');
+            }
+        });
+
+        // アクセス量シミュレーションと線の光り具合制御
+        const accessLevels = {
+            'svg-conn-hub-hongo': 0.8,
+            'svg-conn-hub-komaba': 0.6,
+            'svg-conn-hub-kashiwa': 0.7,
+            'svg-conn-hongo-komaba': 0.5, // 図書館間の線にもアクセスレベルを追加
+            'svg-conn-hongo-kashiwa': 0.9,
+            'svg-conn-komaba-kashiwa': 0.4
+        };
+
+        function updateLineActivity() {
+            // svgLinesオブジェクト内の全ての線をループ
+            for (const lineId in svgLines) {
+                const lineElement = svgLines[lineId];
+                if (!lineElement) continue; // 要素が存在しない場合はスキップ
+
+                let currentAccess = accessLevels[lineId] + (Math.random() * 0.4 - 0.2); // -0.2 to +0.2 のランダム変動
+                currentAccess = Math.max(0.1, Math.min(1.0, currentAccess)); // 0.1から1.0の範囲にクランプ
+                accessLevels[lineId] = currentAccess; // 次の更新のために保存
+
+                if (currentAccess > 0.5) { // ある程度のアクセス量でアクティブにする閾値
+                    lineElement.classList.add('active');
+                } else {
+                    lineElement.classList.remove('active');
+                }
+            }
+        }
+
+        // 一定間隔で線の活動状況を更新
+        setInterval(updateLineActivity, 2000); // 2秒ごとに更新
+
+        // 初期マップアニメーションのトリガーとSVGパスの更新
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.map-container').style.opacity = 1;
+            document.querySelector('.map-container').style.transform = 'scale(1)';
+            updateSvgPaths(); // 初回ロード時にSVGパスを正確に描画
+            updateLineActivity(); // 初期表示時にも一度更新
+        });
+    </script>
+</body>
+</html>
