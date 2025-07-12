@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIチャットポップアップ・コンポーネント</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --light-gray-bg: #F0F2F5;
+            --card-bg: #FFFFFF;
+            --text-color: #333;
+            --sub-text-color: #777;
+            --theme-main-color: #6A0572; /* Purple theme for AI */
+            --theme-sub-color: #0074D9;
+            --accent-gradient: linear-gradient(90deg, var(--theme-main-color), var(--theme-sub-color));
+            --shadow-light: 0 4px 20px rgba(0,0,0,0.05);
+            --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        body { margin: 0; font-family: 'Noto Sans JP', sans-serif; background-color: var(--light-gray-bg); color: var(--text-color); padding: 20px; }
+        
+        /* --- Chat Trigger Button --- */
+        #chat-trigger-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 999;
+        }
+        #chat-trigger-btn:hover {
+            transform: scale(1.1);
+        }
+        #chat-trigger-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Chat Side Panel Overlay --- */
+        #chat-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        #chat-popup-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- Chat Side Panel Container --- */
+        .chat-popup-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background-color: var(--card-bg);
+            box-shadow: -5px 0px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        #chat-popup-overlay.visible .chat-popup-container {
+            transform: translateX(0);
+        }
+        
+        .chat-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            flex-shrink: 0;
+        }
+        .chat-popup-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--theme-main-color);
+        }
+        #chat-close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+            color: var(--sub-text-color);
+        }
+
+        #chat-window { flex-grow: 1; overflow-y: auto; padding: 20px; }
+        .message { display: flex; margin-bottom: 20px; max-width: 90%; }
+        .message .avatar { width: 35px; height: 35px; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+        .message .message-content { padding: 10px 15px; border-radius: 15px; line-height: 1.5; font-size: 0.95rem; }
+        
+        .user-message { align-self: flex-end; flex-direction: row-reverse; }
+        .user-message .avatar { margin-right: 0; margin-left: 10px; }
+        .user-message .message-content { background-color: var(--theme-sub-color); color: white; border-bottom-right-radius: 5px; }
+        
+        .ai-message { align-self: flex-start; }
+        .ai-message .avatar { background: var(--accent-gradient); color: white; display: flex; align-items: center; justify-content: center; }
+        .ai-message .message-content { background-color: #E9E9EB; color: #333; border-bottom-left-radius: 5px; }
+        
+        #chat-input-area { padding: 15px; border-top: 1px solid #e0e0e0; flex-shrink: 0; }
+        .input-form { display: flex; gap: 10px; }
+        #user-input { flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 1rem; }
+        #send-btn { padding: 0 15px; border: none; background: var(--theme-main-color); color: white; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <h1>マイページ（サンプル）</h1>
+    <p>このページがマイページや連携マップの代わりとなります。</p>
+    <p>右下のボタンをクリックすると、AIチャットがサイドパネルとして表示されます。</p>
+
+    <button id="chat-trigger-btn" aria-label="AIチャットを開く">
+        <i data-lucide="bot"></i>
+    </button>
+
+    <div id="chat-popup-overlay">
+        <div class="chat-popup-container">
+            <header class="chat-popup-header">
+                <h1>AIレファレンス司書</h1>
+                <button id="chat-close-btn" aria-label="閉じる">
+                    <i data-lucide="x"></i>
+                </button>
+            </header>
+            <div id="chat-window">
+                <div class="message ai-message">
+                    <div class="avatar"><i data-lucide="bot"></i></div>
+                    <div class="message-content">
+                        <p>こんにちは。どのような情報をお探しですか？</p>
+                    </div>
+                </div>
+            </div>
+            <div id="chat-input-area">
+                <div class="input-form">
+                    <input type="text" id="user-input" placeholder="メッセージを入力...">
+                    <button id="send-btn" aria-label="送信"><i data-lucide="send"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const triggerBtn = document.getElementById('chat-trigger-btn');
+            const popupOverlay = document.getElementById('chat-popup-overlay');
+            const closeBtn = document.getElementById('chat-close-btn');
+            const chatWindow = document.getElementById('chat-window');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+
+            function openChat() {
+                popupOverlay.classList.add('visible');
+                triggerBtn.classList.add('hidden');
+            }
+
+            function closeChat() {
+                popupOverlay.classList.remove('visible');
+                triggerBtn.classList.remove('hidden');
+            }
+
+            triggerBtn.addEventListener('click', openChat);
+            closeBtn.addEventListener('click', closeChat);
+            
+            // Close when clicking on the overlay background, but not on the panel itself
+            popupOverlay.addEventListener('click', (e) => {
+                if (e.target === popupOverlay) {
+                    closeChat();
+                }
+            });
+
+            sendBtn.addEventListener('click', handleUserMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleUserMessage();
+            });
+
+            function handleUserMessage() {
+                const messageText = userInput.value.trim();
+                if (messageText === '') return;
+                appendMessage(messageText, 'user');
+                userInput.value = '';
+                generateAiResponse(messageText);
+            }
+
+            function appendMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', `${sender}-message`);
+                let avatarContent = (sender === 'ai') 
+                    ? '<i data-lucide="bot"></i>' 
+                    : '<img src="https://www.u-tokyo.ac.jp/content/400002137.jpg" style="object-fit:cover;">';
+                messageDiv.innerHTML = `
+                    <div class="avatar">${avatarContent}</div>
+                    <div class="message-content"><p>${text}</p></div>
+                `;
+                chatWindow.appendChild(messageDiv);
+                lucide.createIcons({ nodes: [messageDiv.querySelector('.avatar')] });
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            function generateAiResponse(userText) {
+                let responseText = "申し訳ありません、よく分かりません。";
+                if (userText.includes('論文')) {
+                    responseText = "「データ同化」に関する最新の論文ですね。承知いたしました。データベースを検索します。";
+                } else if (userText.includes('研究者')) {
+                    responseText = "共同研究者をお探しですね。あなたの専門分野に合った方をおすすめします。";
+                }
+                setTimeout(() => {
+                    appendMessage(responseText, 'ai');
+                }, 1000);
+            }
+
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
