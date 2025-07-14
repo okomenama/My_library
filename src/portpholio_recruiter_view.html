@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知のポートフォリオ | Yohei Sawada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #212529;
+            --sub-text-color: #6C757D;
+            --accent-color: #0056b3; /* A professional blue */
+            --border-color: #DEE2E6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+        body { margin: 0; font-family: 'Noto Sans JP', sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.7; }
+        .portfolio-container { max-width: 960px; margin: 50px auto; padding: 20px; animation: fadeIn 1s ease-out; }
+        
+        /* --- Header --- */
+        .portfolio-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+        .portfolio-header img { width: 120px; height: 120px; border-radius: 50%; border: 5px solid var(--card-bg); box-shadow: var(--shadow); }
+        .header-info h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin: 0; }
+        .header-info p { font-size: 1.1rem; color: var(--sub-text-color); margin: 5px 0 15px 0; }
+        .contact-links { display: flex; gap: 20px; }
+        .contact-links a { color: var(--sub-text-color); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s ease; }
+        .contact-links a:hover { color: var(--accent-color); }
+
+        /* --- Section --- */
+        .portfolio-section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+        .portfolio-section h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 20px 0; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; }
+
+        /* Keywords */
+        .keywords-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+        .keyword-chip { background-color: #e9ecef; color: var(--text-color); padding: 8px 18px; border-radius: 20px; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .keyword-chip i { color: var(--accent-color); }
+
+        /* Curated Bookshelf */
+        .bookshelf { margin-bottom: 30px; }
+        .bookshelf:last-child { margin-bottom: 0; }
+        .bookshelf h3 { font-size: 1.4rem; margin: 0 0 15px 0; }
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; }
+        .book-item { text-align: center; }
+        .book-item img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+        .book-item:hover img { transform: scale(1.05); }
+        .book-item h4 { font-size: 0.9rem; margin: 10px 0 5px 0; }
+        .book-item p { font-size: 0.8rem; color: var(--sub-text-color); margin: 0; }
+
+        /* Reliability Footer */
+        .reliability-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: var(--sub-text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .reliability-footer i { color: #28a745; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) {
+            .portfolio-header { flex-direction: column; text-align: center; }
+            .contact-links { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="portfolio-container">
+        <header class="portfolio-header">
+            <img src="https://www.u-tokyo.ac.jp/content/400002137.jpg" alt="User Avatar">
+            <div class="header-info">
+                <h1>Yohei Sawada</h1>
+                <p>東京大学 大学院工学系研究科 | 知のポートフォリオ</p>
+                <div class="contact-links">
+                    <a href="#"><i data-lucide="mail"></i>Contact</a>
+                    <a href="#"><i data-lucide="linkedin"></i>LinkedIn</a>
+                    <a href="#"><i data-lucide="github"></i>GitHub</a>
+                </div>
+            </div>
+        </header>
+
+        <section class="portfolio-section">
+            <h2>知のキーワード</h2>
+            <div class="keywords-grid">
+                <div class="keyword-chip"><i data-lucide="brain-circuit"></i>データ同化</div>
+                <div class="keyword-chip"><i data-lucide="wind"></i>気象力学</div>
+                <div class="keyword-chip"><i data-lucide="calculator"></i>数値予報</div>
+                <div class="keyword-chip"><i data-lucide="atom"></i>統計物理</div>
+                <div class="keyword-chip"><i data-lucide="brain-cog"></i>機械学習</div>
+                <div class="keyword-chip"><i data-lucide="waves"></i>流体力学</div>
+            </div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>キュレーション本棚</h2>
+            <div class="bookshelf">
+                <h3>私の研究の基盤を形成した書籍</h3>
+                <div class="book-grid">
+                    <div class="book-item">
+                        <img src="https://images-na.ssl-images-amazon.com/images/I/4163g1b4wYL._SX331_BO1,204,203,200_.jpg" alt="Book Cover">
+                        <h4>Atmospheric Modeling...</h4>
+                        <p>Eugenia Kalnay</p>
+                    </div>
+                    <div class="book-item">
+                        <img src="https://m.media-amazon.com/images/I/71oD415Jk8L._AC_UF1000,1000_QL80_.jpg" alt="Book Cover">
+                        <h4>Data Assimilation</h4>
+                        <p>Geir Evensen</p>
+                    </div>
+                    <div class="book-item">
+                        <img src="https://m.media-amazon.com/images/I/51IY619A-WL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover">
+                        <h4>Dynamic Meteorology</h4>
+                        <p>James R. Holton</p>
+                    </div>
+                    <div class="book-item">
+                        <img src="https://m.media-amazon.com/images/I/91a9e52QpWL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover">
+                        <h4>Nonlinear Dynamics...</h4>
+                        <p>Steven H. Strogatz</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="portfolio-section">
+            <h2>研究成果ハイライト</h2>
+            <div class="bookshelf">
+                <h3>主要論文</h3>
+                <div class="book-grid">
+                     <div class="book-item">
+                        <img src="https://via.placeholder.com/120x180/0056b3/fff?text=QJRMS" alt="Paper Cover">
+                        <h4>A variational approach...</h4>
+                        <p>QJRMS, 2019</p>
+                    </div>
+                    <div class="book-item">
+                        <img src="https://via.placeholder.com/120x180/6c757d/fff?text=JAS" alt="Paper Cover">
+                        <h4>Ensemble-based sensitivity...</h4>
+                        <p>JAS, 2021</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <footer class="reliability-footer">
+        <i data-lucide="shield-check"></i>
+        <span>このポートフォリオの情報は、東京大学附属図書館の貸出履歴・論文DBとの連携に基づき生成されています。</span>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

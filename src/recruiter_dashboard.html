@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>候補者検索ダッシュボード - 私の図書館</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #212529;
+            --sub-text-color: #6C757D;
+            --accent-color: #0056b3;
+            --border-color: #DEE2E6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+        body { margin: 0; font-family: 'Noto Sans JP', sans-serif; background-color: var(--bg-color); color: var(--text-color); }
+        .dashboard-container { max-width: 1100px; margin: 50px auto; padding: 20px; animation: fadeIn 1s ease-out; }
+        
+        /* --- Header --- */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .dashboard-header h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0 0 10px 0; }
+        .dashboard-header p { font-size: 1.1rem; color: var(--sub-text-color); margin: 0; }
+
+        /* --- Search Bar --- */
+        .search-bar-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        #keyword-search {
+            flex-grow: 1;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        #search-btn {
+            padding: 0 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #search-btn:hover { background-color: #00418a; }
+
+        /* --- Results --- */
+        .results-info {
+            margin-bottom: 20px;
+            color: var(--sub-text-color);
+        }
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* Candidate Card */
+        .candidate-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .candidate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .avatar-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .avatar-placeholder i { color: var(--sub-text-color); }
+        .candidate-info h3 { font-size: 1.2rem; margin: 0; }
+        .candidate-info p { color: var(--sub-text-color); margin: 5px 0 0 0; }
+        
+        .card-body h4 { font-size: 1rem; margin: 0 0 10px 0; }
+        .keywords-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .keyword-chip { background-color: #e9ecef; color: var(--text-color); padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; }
+        .keyword-chip.match { background-color: #d1e7dd; color: #0f5132; font-weight: 700; }
+
+        .card-footer {
+            margin-top: auto; /* Pushes footer to the bottom */
+            padding-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .card-btn {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .card-btn:hover { background-color: #f8f9fa; border-color: #adb5bd; }
+        .card-btn.primary {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .card-btn.primary:hover { background-color: #00418a; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>候補者検索ダッシュボード</h1>
+            <p>キーワードを基に、貴社にマッチする可能性のある学生を検索します。</p>
+        </header>
+
+        <section class="search-bar-section">
+            <input type="search" id="keyword-search" placeholder="キーワードで検索 (例: 機械学習, Python, データ同化)">
+            <button id="search-btn">検索</button>
+        </section>
+
+        <div class="results-info">
+            <span id="results-count"></span>
+        </div>
+
+        <main class="results-container" id="results-container">
+            <!-- Candidate cards will be dynamically inserted here -->
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const studentData = [
+                { id: 1, anonymousName: '工学系研究科 M2', keywords: ['機械学習', 'Python', '深層学習', 'コンピュータビジョン'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+                { id: 2, anonymousName: '理学系研究科 D1', keywords: ['データ同化', '数値予報', 'Fortran', '統計物理'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+                { id: 3, anonymousName: '新領域創成科学研究科 M1', keywords: ['複雑系科学', 'Python', 'データ分析', 'シミュレーション'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+                { id: 4, anonymousName: '情報理工学系研究科 M2', keywords: ['高性能計算', 'C++', '数値予報', '並列処理'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+                { id: 5, anonymousName: '教養学部 4年', keywords: ['経済学', '統計', 'R', 'データ分析'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+                { id: 6, anonymousName: '工学系研究科 D2', keywords: ['流体力学', 'シミュレーション', 'Python', '機械学習'], matchScore: 0, portfolioUrl: 'portfolio.html' },
+            ];
+
+            const searchInput = document.getElementById('keyword-search');
+            const searchBtn = document.getElementById('search-btn');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsCount = document.getElementById('results-count');
+
+            function renderResults(filterKeywords = []) {
+                resultsContainer.innerHTML = '';
+                
+                let filteredStudents = studentData;
+
+                if (filterKeywords.length > 0) {
+                    filteredStudents = studentData.map(student => {
+                        const matchedKeywords = student.keywords.filter(kw => 
+                            filterKeywords.some(fk => kw.toLowerCase().includes(fk.toLowerCase()))
+                        );
+                        student.matchScore = (matchedKeywords.length / filterKeywords.length) * 100;
+                        return student;
+                    }).filter(student => student.matchScore > 0)
+                      .sort((a, b) => b.matchScore - a.matchScore);
+                }
+
+                resultsCount.textContent = `${filteredStudents.length}名がヒットしました。`;
+
+                if (filteredStudents.length === 0 && filterKeywords.length > 0) {
+                    resultsContainer.innerHTML = `<p>指定されたキーワードにマッチする候補者が見つかりませんでした。</p>`;
+                    return;
+                }
+
+                filteredStudents.forEach(student => {
+                    const card = document.createElement('div');
+                    card.className = 'candidate-card';
+
+                    const keywordsHTML = student.keywords.map(kw => {
+                        const isMatch = filterKeywords.some(fk => kw.toLowerCase().includes(fk.toLowerCase()));
+                        return `<span class="keyword-chip ${isMatch ? 'match' : ''}">${kw}</span>`;
+                    }).join('');
+
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="avatar-placeholder"><i data-lucide="user"></i></div>
+                            <div class="candidate-info">
+                                <h3>${student.anonymousName}</h3>
+                                <p>関心の一致度: <strong>${Math.round(student.matchScore)}%</strong></p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4>知のキーワード</h4>
+                            <div class="keywords-grid">${keywordsHTML}</div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="card-btn" onclick="window.open('${student.portfolioUrl}', '_blank')">詳細ポートフォリオを見る</button>
+                            <button class="card-btn primary">スカウトを送る</button>
+                        </div>
+                    `;
+                    resultsContainer.appendChild(card);
+                });
+                lucide.createIcons();
+            }
+
+            function handleSearch() {
+                const searchTerms = searchInput.value.split(/[\s,、]+/).filter(term => term);
+                renderResults(searchTerms);
+            }
+
+            searchBtn.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+
+            // Initial render
+            renderResults();
+        });
+    </script>
+</body>
+</html>

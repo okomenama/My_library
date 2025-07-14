@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学内トレンド - 私の図書館</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #212529;
+            --sub-text-color: #6C757D;
+            --accent-color: #20c997; /* A fresh green for trends */
+            --accent-color-hot: #fd7e14; /* Orange for hot trends */
+            --accent-color-serendipity: #6f42c1; /* Purple for serendipity */
+            --accent-color-professor: #0056b3; /* Blue for professor's pick */
+            --accent-color-gem: #087990; /* Teal for hidden gems */
+            --accent-color-volume: #ffc107; /* Yellow for volume ranking */
+            --border-color: #DEE2E6;
+            --shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+        body { margin: 0; font-family: 'Noto Sans JP', sans-serif; background-color: var(--bg-color); color: var(--text-color); }
+        .trends-container { max-width: 1200px; margin: 50px auto; padding: 20px; animation: fadeIn 1s ease-out; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0; }
+        .filter-section { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; background-color: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: var(--shadow); }
+        .filter-group { display: flex; align-items: center; gap: 10px; }
+        .filter-group label { font-weight: 700; font-size: 1rem; color: var(--sub-text-color); }
+        .filter-group select { padding: 10px 15px; font-size: 1rem; border: 1px solid var(--border-color); border-radius: 8px; background-color: white; cursor: pointer; }
+
+        .trends-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-top: 20px; }
+        .trends-widget { background: var(--card-bg); border-radius: 15px; box-shadow: var(--shadow); padding: 30px; display: flex; flex-direction: column; }
+        .widget-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .widget-header i { color: var(--accent-color); }
+        .widget-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0; }
+
+        /* Popular Topics (Bar Chart) */
+        .topic-list { list-style: none; padding: 0; margin: 0; }
+        .topic-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .topic-name { width: 120px; font-weight: 700; text-align: right; white-space: nowrap; font-size: 0.95rem; }
+        .topic-bar-container { flex-grow: 1; background-color: #e9ecef; border-radius: 5px; }
+        .topic-bar { height: 25px; background-color: var(--accent-color); border-radius: 5px; text-align: right; color: white; font-size: 0.8rem; line-height: 25px; padding-right: 10px; transition: width 0.5s ease-out; }
+
+        /* Book List Styles */
+        .book-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        .book-list-item { display: flex; align-items: center; gap: 20px; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .book-list-item:last-child { border-bottom: none; }
+        .book-rank { font-size: 1.5rem; font-weight: 700; color: var(--sub-text-color); width: 30px; text-align: center; }
+        .book-cover { width: 50px; height: 75px; object-fit: cover; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .book-info h3 { font-size: 1rem; margin: 0 0 5px 0; }
+        .book-info p { font-size: 0.85rem; color: var(--sub-text-color); margin: 0; }
+
+        /* Widget-specific colors */
+        #hot-books-widget .widget-header i, #hot-books-widget .book-rank { color: var(--accent-color-hot); }
+        #serendipity-widget { background: linear-gradient(135deg, #6f42c1, #4a148c); color: white; }
+        #serendipity-widget .widget-header i, #serendipity-widget .widget-header h2 { color: white; }
+        #journey-widget .widget-header i { color: var(--accent-color); }
+        #professor-pick-widget { background-color: #e7f5ff; }
+        #professor-pick-widget .widget-header i { color: var(--accent-color-professor); }
+        #hidden-gems-widget .widget-header i, #hidden-gems-widget .book-rank { color: var(--accent-color-gem); }
+        #reading-volume-widget .widget-header i { color: var(--accent-color-volume); }
+        #reading-volume-widget .topic-bar { background-color: var(--accent-color-volume); }
+
+        /* NEW: Reading Volume Widget */
+        .volume-ranking-scope { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .scope-btn { background: #f1f3f5; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .scope-btn.active { background: var(--accent-color-volume); color: #333; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 900px) { .trends-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="trends-container">
+        <header class="page-header">
+            <h1>学内トレンド</h1>
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="faculty-select"><i data-lucide="building-2"></i> 学部:</label>
+                    <select id="faculty-select">
+                        <option value="all">大学全体</option>
+                        <option value="engineering">工学系研究科</option>
+                        <option value="science">理学系研究科</option>
+                        <option value="info_sci">情報理工学系研究科</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="grade-select"><i data-lucide="user-check"></i> 学年:</label>
+                    <select id="grade-select">
+                        <option value="all">全学年</option>
+                        <option value="b1">学部1年</option>
+                        <option value="b2">学部2年</option>
+                        <option value="b3">学部3年</option>
+                        <option value="b4">学部4年</option>
+                        <option value="m">修士</option>
+                        <option value="d">博士</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="trends-grid">
+            <section class="trends-widget" id="popular-topics-widget">
+                <div class="widget-header"><i data-lucide="bar-chart-3"></i><h2>人気のトピック</h2></div>
+                <ul class="topic-list" id="topic-list"></ul>
+            </section>
+
+            <section class="trends-widget" id="trending-books-widget">
+                <div class="widget-header"><i data-lucide="book-open-check"></i><h2>話題の書籍</h2></div>
+                <ul class="book-list" id="book-list"></ul>
+            </section>
+            
+            <section class="trends-widget" id="hot-books-widget">
+                <div class="widget-header"><i data-lucide="flame"></i><h2>今週の急上昇書籍</h2></div>
+                <ul class="book-list" id="hot-book-list"></ul>
+            </section>
+
+            <!-- NEW WIDGET -->
+            <section class="trends-widget" id="reading-volume-widget">
+                <div class="widget-header"><i data-lucide="book-up"></i><h2>読書数ランキング</h2></div>
+                <div class="volume-ranking-scope">
+                    <button class="scope-btn active" data-scope="faculty">学部別</button>
+                    <button class="scope-btn" data-scope="grade">学年別</button>
+                </div>
+                <ul class="topic-list" id="volume-list"></ul>
+            </section>
+
+            <section class="trends-widget" id="professor-pick-widget">
+                <div class="widget-header"><i data-lucide="graduation-cap"></i><h2>教員の推薦図書</h2></div>
+                <div id="professor-pick-card"></div>
+            </section>
+
+             <section class="trends-widget" id="hidden-gems-widget">
+                <div class="widget-header"><i data-lucide="gem"></i><h2>隠れた名著</h2></div>
+                <ul class="book-list" id="hidden-gems-list"></ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mock Data
+            const trendsData = { /* (omitted for brevity, same as previous version) */ };
+            const volumeData = {
+                byFaculty: [
+                    { name: '工学系', value: 100 },
+                    { name: '理学系', value: 92 },
+                    { name: '情報理工', value: 88 },
+                    { name: '教養学部', value: 85 },
+                    { name: '新領域', value: 70 },
+                ],
+                byGrade: [
+                    { name: '修士1年', value: 100 },
+                    { name: '学部3年', value: 95 },
+                    { name: '学部4年', value: 90 },
+                    { name: '博士2年', value: 88 },
+                    { name: '学部2年', value: 75 },
+                ]
+            };
+
+            const facultySelect = document.getElementById('faculty-select');
+            const gradeSelect = document.getElementById('grade-select');
+            const topicList = document.getElementById('topic-list');
+            const bookList = document.getElementById('book-list');
+            const hotBookList = document.getElementById('hot-book-list');
+            const volumeList = document.getElementById('volume-list');
+            const volumeScopeBtns = document.querySelectorAll('.volume-ranking-scope .scope-btn');
+
+            function renderList(container, items, type) {
+                container.innerHTML = '';
+                if (!items) return;
+                
+                if (type === 'topic' || type === 'volume') {
+                    const maxValue = items[0]?.value || 1;
+                    items.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'topic-item';
+                        const percentage = (item.value / maxValue) * 100;
+                        li.innerHTML = `
+                            <div class="topic-name">${item.name}</div>
+                            <div class="topic-bar-container">
+                                <div class="topic-bar" style="width: ${percentage}%;">${item.value}</div>
+                            </div>`;
+                        container.appendChild(li);
+                    });
+                } else if (type === 'book') {
+                    items.forEach((book, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'book-list-item';
+                        li.innerHTML = `
+                            <div class="book-rank">${index + 1}</div>
+                            <img src="${book.cover}" alt="${book.title}" class="book-cover">
+                            <div class="book-info"><h3>${book.title}</h3><p>${book.author}</p></div>`;
+                        container.appendChild(li);
+                    });
+                }
+            }
+            
+            function renderTrends() {
+                const faculty = facultySelect.value;
+                const grade = gradeSelect.value;
+                
+                // For this demo, main widgets are only filtered by faculty
+                const data = trendsData[faculty] || trendsData.all;
+                renderList(topicList, data.topics, 'topic');
+                renderList(bookList, data.books, 'book');
+                renderList(hotBookList, data.hotBooks, 'book');
+                // Other widgets can be rendered here...
+            }
+
+            function renderVolumeRanking() {
+                const activeScope = document.querySelector('.volume-ranking-scope .scope-btn.active').dataset.scope;
+                const data = (activeScope === 'faculty') ? volumeData.byFaculty : volumeData.byGrade;
+                renderList(volumeList, data, 'volume');
+            }
+
+            facultySelect.addEventListener('change', renderTrends);
+            gradeSelect.addEventListener('change', renderTrends);
+            volumeScopeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    volumeScopeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderVolumeRanking();
+                });
+            });
+
+            // Initial render
+            renderTrends();
+            renderVolumeRanking();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
