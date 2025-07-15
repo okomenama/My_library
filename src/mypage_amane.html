@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マイライブラリ - 私の図書館</title>
+    <title>マイライブラリ - Amane Kubo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -224,7 +224,7 @@
         .bar:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .bar:hover::after { content: attr(data-value); position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: var(--theme-main-color); color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.9rem; white-space: nowrap; opacity: 1; transition: opacity 0.3s; }
         .bar::after { opacity: 0; }
-        .donut-chart { width: 180px; height: 180px; margin: 20px auto; border-radius: 50%; background: conic-gradient(#0074D9 0% 40%, #2ECC40 40% 75%, #FF851B 75% 100%); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .donut-chart { width: 180px; height: 180px; margin: 20px auto; border-radius: 50%; background: conic-gradient(#8B4513 0% 35%, #4169E1 35% 65%, #32CD32 65% 85%, #FF6347 85% 100%); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .donut-chart::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: var(--card-bg); border-radius: 50%; }
         .legend-list { list-style: none; padding: 0; margin-top: 25px; text-align: left; }
         .legend-list li { display: flex; align-items: center; margin-bottom: 10px; font-size: 1rem; color: var(--text-color); }
@@ -238,7 +238,7 @@
         .progress-details h4 { font-size: 1.2rem; margin: 0 0 5px 0; color: var(--text-color); }
         .progress-details p { font-size: 0.95rem; color: var(--sub-text-color); margin: 0 0 10px 0; }
         .progress-bar-bg { width: 100%; height: 12px; background: #e0e0e0; border-radius: 6px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
-        .progress-bar-fg { width: 40%; height: 100%; background: var(--accent-gradient); border-radius: 6px; transition: width 0.5s ease-out; }
+        .progress-bar-fg { width: 70%; height: 100%; background: var(--accent-gradient); border-radius: 6px; transition: width 0.5s ease-out; }
         .timeline-container { position: relative; padding: 20px 0; margin-top: 20px; }
         .timeline-axis { position: absolute; top: 50%; left: 5%; width: 90%; height: 4px; background: #e0e0e0; border-radius: 2px; transform: translateY(-50%); }
         .timeline-nodes { display: flex; justify-content: space-between; position: relative; width: 90%; margin: 0 auto; }
@@ -430,11 +430,11 @@
         <div class="user-selector">
             <label for="user-select">ユーザー:</label>
             <select id="user-select" class="user-dropdown" onchange="switchUser()">
-                <option value="yohei" selected>Yohei Sawada (准教授)</option>
-                <option value="amane">Amane Kubo (M2学生)</option>
+                <option value="amane" selected>Amane Kubo (M2学生)</option>
+                <option value="yohei">Yohei Sawada (准教授)</option>
                 <option value="default">デフォルトユーザー</option>
             </select>
-            <img id="user-avatar" src="https://www.u-tokyo.ac.jp/content/400002137.jpg" alt="User Avatar" class="user-avatar">
+            <img id="user-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" alt="User Avatar" class="user-avatar">
         </div>
     </div>
 
@@ -459,14 +459,14 @@
         </header>
 
         <header class="profile-header">
-            <img src="https://www.u-tokyo.ac.jp/content/400002137.jpg" alt="User Avatar" class="avatar">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" alt="User Avatar" class="avatar">
             <div class="user-info">
-                <h2>Yohei Sawada</h2>
-                <p>東京大学 大学院工学系研究科 准教授</p>
+                <h2>Amane Kubo</h2>
+                <p>東京大学 大学院工学系研究科 M2</p>
             </div>
             <div class="profile-stats">
-                <div class="stat-item"><div class="number">121</div><div class="label">総文献数</div></div>
-                <div class="stat-item"><div class="number">15</div><div class="label">今年の文献数</div></div>
+                <div class="stat-item"><div class="number">19</div><div class="label">総文献数</div></div>
+                <div class="stat-item"><div class="number">8</div><div class="label">今年の文献数</div></div>
             </div>
         </header>
 
@@ -477,17 +477,22 @@
                     <div class="stats-widget">
                         <h3>月間読書グラフ (2025年)</h3>
                         <div class="bar-chart">
-                            <div class="bar" style="height: 60%;" data-value="3冊"></div><div class="bar" style="height: 40%;" data-value="2冊"></div><div class="bar" style="height: 80%;" data-value="4冊"></div>
-                            <div class="bar" style="height: 100%;" data-value="5冊"></div><div class="bar" style="height: 60%;" data-value="3冊"></div><div class="bar" style="height: 40%;" data-value="2冊"></div>
+                            <div class="bar" style="height: 60%;" data-value="3冊"></div>
+                            <div class="bar" style="height: 40%;" data-value="2冊"></div>
+                            <div class="bar" style="height: 20%;" data-value="1冊"></div>
+                            <div class="bar" style="height: 20%;" data-value="1冊"></div>
+                            <div class="bar" style="height: 100%;" data-value="5冊"></div>
+                            <div class="bar" style="height: 40%;" data-value="2冊"></div>
                         </div>
                     </div>
                     <div class="stats-widget">
                         <h3>専門分野</h3>
                         <div class="donut-chart"></div>
                         <ul class="legend-list">
-                            <li><span class="legend-color-box" style="background-color: #0074D9;"></span> 気象力学 (40%)</li>
-                            <li><span class="legend-color-box" style="background-color: #2ECC40;"></span> データ同化 (35%)</li>
-                            <li><span class="legend-color-box" style="background-color: #FF851B;"></span> 数値予報 (25%)</li>
+                            <li><span class="legend-color-box" style="background-color: #8B4513;"></span> 制御理論 (35%)</li>
+                            <li><span class="legend-color-box" style="background-color: #4169E1;"></span> システム同定 (30%)</li>
+                            <li><span class="legend-color-box" style="background-color: #32CD32;"></span> 数学・統計 (20%)</li>
+                            <li><span class="legend-color-box" style="background-color: #FF6347;"></span> データ解析 (15%)</li>
                         </ul>
                     </div>
                 </aside>
@@ -495,29 +500,141 @@
                     <section class="section-card currently-reading">
                         <h2>今読んでいる文献</h2>
                         <div class="progress-book">
-                            <img src="https://images-na.ssl-images-amazon.com/images/I/4163g1b4wYL._SX331_BO1,204,203,200_.jpg" alt="Book cover">
+                            <img src="https://m.media-amazon.com/images/I/51nI8E7ovaL.jpg" alt="Book cover">
                             <div class="progress-details">
-                                <h4>Atmospheric Modeling, Data Assimilation and Predictability</h4><p>Eugenia Kalnay</p>
+                                <h4>システム同定入門</h4><p>片山徹著</p>
                                 <div class="progress-bar-bg"><div class="progress-bar-fg"></div></div>
                             </div>
                         </div>
                     </section>
                     <section class="section-card interest-timeline">
                         <h2>興味・関心の変遷</h2>
-                        <div class="timeline-container"><div class="timeline-axis"></div><div class="timeline-nodes"></div></div>
+                        <div class="timeline-container">
+                            <div class="timeline-axis"></div>
+                            <div class="timeline-nodes">
+                                <div class="timeline-node">
+                                    <div class="year-label">2024年前半</div>
+                                    <div class="timeline-popup">
+                                        <h4>2024年前半の主な関心</h4>
+                                        <ul class="keyword-list">
+                                            <li class="keyword-tag" style="background-color: #8B4513; color: #fff;">数学基礎</li>
+                                            <li class="keyword-tag" style="background-color: #FF6347; color: #fff;">データ解析</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="year-label">2024年後半</div>
+                                    <div class="timeline-popup">
+                                        <h4>2024年後半の主な関心</h4>
+                                        <ul class="keyword-list">
+                                            <li class="keyword-tag" style="background-color: #4169E1; color: #fff;">制御理論</li>
+                                            <li class="keyword-tag" style="background-color: #8B4513; color: #fff;">確率システム</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="year-label">2025年</div>
+                                    <div class="timeline-popup">
+                                        <h4>2025年の主な関心</h4>
+                                        <ul class="keyword-list">
+                                            <li class="keyword-tag" style="background-color: #4169E1; color: #fff;">システム同定</li>
+                                            <li class="keyword-tag" style="background-color: #8B4513; color: #fff;">非線形制御</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                     <section class="bookshelf">
                         <div class="bookshelf-filters">
-                            <div class="filter-group"><label>タイプ:</label><button class="filter-btn active" data-filter-type="all">すべて</button><button class="filter-btn" data-filter-type="book">本</button><button class="filter-btn" data-filter-type="paper">論文</button></div>
-                            <div class="filter-group"><label>ジャンル:</label><button class="filter-btn active" data-filter-category="all">すべて</button><button class="filter-btn" data-filter-category="data-assimilation">データ同化</button><button class="filter-btn" data-filter-category="meteorology">気象力学</button><button class="filter-btn" data-filter-category="numerical-weather">数値予報</button><button class="filter-btn" data-filter-category="fluid-dynamics">流体力学</button></div>
-                            <div class="filter-group"><label>年代:</label><button class="filter-btn active" data-filter-year="all">すべて</button><button class="filter-btn" data-filter-year="2025">2025</button><button class="filter-btn" data-filter-year="2024">2024</button><button class="filter-btn" data-filter-year="2023">2023</button><button class="filter-btn" data-filter-year="older">〜2022</button></div>
+                            <div class="filter-group">
+                                <label>分野:</label>
+                                <button class="filter-btn active" data-filter-category="all">すべて</button>
+                                <button class="filter-btn" data-filter-category="control-theory">制御理論</button>
+                                <button class="filter-btn" data-filter-category="system-identification">システム同定</button>
+                                <button class="filter-btn" data-filter-category="mathematics">数学・統計</button>
+                                <button class="filter-btn" data-filter-category="data-analysis">データ解析</button>
+                            </div>
+                            <div class="filter-group">
+                                <label>年代:</label>
+                                <button class="filter-btn active" data-filter-year="all">すべて</button>
+                                <button class="filter-btn" data-filter-year="2025">2025</button>
+                                <button class="filter-btn" data-filter-year="2024">2024</button>
+                            </div>
                         </div>
                         <div class="bookshelf-grid">
-                            <div class="book-card" data-category="data-assimilation" data-type="book" data-year="2025"><img src="https://m.media-amazon.com/images/I/71oD415Jk8L._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover"><div class="book-info"><h4>Data Assimilation: Methods, Observations and Applications</h4><p>Geir Evensen</p><div class="rating">★★★★★</div></div></div>
-                            <div class="book-card" data-category="meteorology" data-type="book" data-year="2024"><img src="https://m.media-amazon.com/images/I/51IY619A-WL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover"><div class="book-info"><h4>An Introduction to Dynamic Meteorology</h4><p>James R. Holton</p><div class="rating">★★★★★</div></div></div>
-                            <div class="book-card" data-category="fluid-dynamics" data-type="book" data-year="2023"><img src="https://m.media-amazon.com/images/I/71uF-cWpZDL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover"><div class="book-info"><h4>Atmospheric and Oceanic Fluid Dynamics</h4><p>Geoffrey K. Vallis</p><div class="rating">★★★★☆</div></div></div>
-                            <div class="book-card" data-category="numerical-weather" data-type="book" data-year="2025"><img src="https://images.booksense.com/images/936/231/9780521231936.jpg" alt="Book Cover" class="cover"><div class="book-info"><h4>Numerical Weather and Climate Prediction</h4><p>Thomas T. Warner</p><div class="rating">★★★★☆</div></div></div>
-                            <div class="book-card" data-category="fluid-dynamics" data-type="book" data-year="2024"><img src="https://m.media-amazon.com/images/I/91a9e52QpWL._AC_UF1000,1000_QL80_.jpg" alt="Book Cover" class="cover"><div class="book-info"><h4>Nonlinear Dynamics and Chaos</h4><p>Steven H. Strogatz</p><div class="rating">★★★★★</div></div></div>
+                            <div class="book-card" data-category="system-identification" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/51nI8E7ovaL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>システム同定入門</h4>
+                                    <p>片山徹著</p>
+                                    <div class="rating">★★★★★</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="system-identification" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/51ky+b2NQKL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>システム同定 : 部分空間法からのアプローチ</h4>
+                                    <p>片山徹著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/41Ue8r7FGFL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>確率システムにおける制御理論</h4>
+                                    <p>向谷博明著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/51EjVlV4+6L.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>ロバスト制御</h4>
+                                    <p>藤森篤著</p>
+                                    <div class="rating">★★★★★</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/51H1Z9FQrDL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>非線形システム制御論</h4>
+                                    <p>島公脩 [ほか] 共著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://m.media-amazon.com/images/I/51vQy2V5Z1L.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>非線形最適制御入門</h4>
+                                    <p>大塚敏之著</p>
+                                    <div class="rating">★★★★★</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="data-analysis" data-year="2024">
+                                <img src="https://m.media-amazon.com/images/I/51ZxQyD5YjL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>位相的データ解析から構造発見へ</h4>
+                                    <p>池祐一 [ほか] 共著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="mathematics" data-year="2024">
+                                <img src="https://m.media-amazon.com/images/I/51RR+jZ-bfL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>代数幾何学入門</h4>
+                                    <p>永井保成著</p>
+                                    <div class="rating">★★★☆☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="mathematics" data-year="2024">
+                                <img src="https://m.media-amazon.com/images/I/51WBzP3PELL.jpg" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>統計力学</h4>
+                                    <p>阿部龍蔵著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </main>
@@ -530,23 +647,57 @@
                         <button class="filter-btn active" data-filter="all"><i data-lucide="infinity"></i>すべて</button>
                         <button class="filter-btn" data-filter="publication"><i data-lucide="file-text"></i>論文</button>
                         <button class="filter-btn" data-filter="presentation"><i data-lucide="presentation"></i>学会発表</button>
-                        <button class="filter-btn" data-filter="dataset"><i data-lucide="database"></i>データ</button>
-                        <button class="filter-btn" data-filter="code"><i data-lucide="code-2"></i>コード</button>
+                        <button class="filter-btn" data-filter="research"><i data-lucide="search"></i>研究テーマ</button>
                     </div>
-                    <article class="research-card" data-type="publication"><div class="card-icon"><i data-lucide="file-text"></i></div><div class="card-content"><div class="card-header"><h3>A variational approach for the four-dimensional assimilation of meteorological observations</h3><span class="card-type-badge">査読有り論文</span></div><div class="card-body"><p><strong>著者:</strong> Y. Sawada, P. Gauthier, M. Tanguay, A. Zadra</p><div class="card-meta"><div class="meta-item"><i data-lucide="book-open"></i>Quarterly Journal of the Royal Meteorological Society</div><div class="meta-item"><i data-lucide="calendar"></i>2019年4月</div></div></div><div class="card-footer"><button class="action-btn primary"><i data-lucide="download"></i>PDFを閲覧</button><button class="action-btn"><i data-lucide="link"></i>DOI: 10.1002/qj.3486</button><button class="action-btn"><i data-lucide="quote"></i>引用</button></div></div></article>
-                    <article class="research-card" data-type="presentation"><div class="card-icon"><i data-lucide="presentation"></i></div><div class="card-content"><div class="card-header"><h3>データ同化と機械学習の融合に向けた最近の取り組み</h3><span class="card-type-badge">招待講演</span></div><div class="card-body"><p><strong>発表者:</strong> 澤田 洋平</p><div class="card-meta"><div class="meta-item"><i data-lucide="map-pin"></i>理化学研究所 計算科学研究センター</div><div class="meta-item"><i data-lucide="calendar"></i>2023年11月</div></div></div><div class="card-footer"><button class="action-btn primary"><i data-lucide="download"></i>スライドを閲覧</button><button class="action-btn"><i data-lucide="video"></i>発表映像</button></div></div></article>
-                    <article class="research-card" data-type="dataset"><div class="card-icon"><i data-lucide="database"></i></div><div class="card-content"><div class="card-header"><h3>全球アンサンブル再解析データセット (JRA-55)</h3><span class="card-type-badge">データセット</span></div><div class="card-body"><p><strong>概要:</strong> 1958年から現在までの全球大気再解析データ。データ同化研究の基礎となる重要なデータセット。</p><div class="card-meta"><div class="meta-item"><i data-lucide="hard-drive"></i>気象庁</div><div class="meta-item"><i data-lucide="calendar"></i>更新日: 2024年5月</div></div></div><div class="card-footer"><button class="action-btn primary"><i data-lucide="download"></i>データへアクセス</button><button class="action-btn"><i data-lucide="file-text"></i>ドキュメント</button></div></div></article>
-                    <article class="research-card" data-type="code"><div class="card-icon"><i data-lucide="code-2"></i></div><div class="card-content"><div class="card-header"><h3>PyDA: Python-based Data Assimilation Library</h3><span class="card-type-badge">ソフトウェア</span></div><div class="card-body"><p><strong>概要:</strong> アンサンブルカルマンフィルタや変分法を含む、主要なデータ同化手法を実装したPythonライブラリ。</p><div class="card-meta"><div class="meta-item"><i data-lucide="github"></i>github.com/yoheisawada/pyda</div><div class="meta-item"><i data-lucide="star"></i>スター: 1.2k</div></div></div><div class="card-footer"><button class="action-btn primary"><i data-lucide="github"></i>リポジトリへ</button><button class="action-btn"><i data-lucide="book"></i>ドキュメント</button></div></div></article>
+                    <article class="research-card" data-type="research">
+                        <div class="card-icon"><i data-lucide="search"></i></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3>システム同定手法の研究</h3>
+                                <span class="card-type-badge">修士研究</span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>概要:</strong> 部分空間法を用いたシステム同定手法の改良とロバスト制御への応用に関する研究</p>
+                                <div class="card-meta">
+                                    <div class="meta-item"><i data-lucide="calendar"></i>2024年4月 - 現在</div>
+                                    <div class="meta-item"><i data-lucide="user"></i>指導教員: 田中教授</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="action-btn primary"><i data-lucide="file-text"></i>資料を閲覧</button>
+                                <button class="action-btn"><i data-lucide="presentation"></i>発表スライド</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="research-card" data-type="presentation">
+                        <div class="card-icon"><i data-lucide="presentation"></i></div>
+                        <div class="card-content">
+                            <div class="card-header">
+                                <h3>部分空間法を用いたシステム同定の収束性解析</h3>
+                                <span class="card-type-badge">学会発表</span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>発表者:</strong> 久保周</p>
+                                <div class="card-meta">
+                                    <div class="meta-item"><i data-lucide="map-pin"></i>計測自動制御学会 システム同定部門研究会</div>
+                                    <div class="meta-item"><i data-lucide="calendar"></i>2024年12月</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="action-btn primary"><i data-lucide="download"></i>スライドを閲覧</button>
+                                <button class="action-btn"><i data-lucide="external-link"></i>学会サイト</button>
+                            </div>
+                        </div>
+                    </article>
                 </main>
                 <aside class="research-sidebar">
                     <div class="summary-widget">
-                        <h3>業績サマリー</h3>
+                        <h3>研究活動サマリー</h3>
                         <ul class="summary-list">
-                            <li class="summary-item"><span class="label"><i data-lucide="file-text"></i>論文</span><span class="count">32</span></li>
-                            <li class="summary-item"><span class="label"><i data-lucide="presentation"></i>学会発表</span><span class="count">58</span></li>
-                            <li class="summary-item"><span class="label"><i data-lucide="database"></i>データセット</span><span class="count">4</span></li>
-                            <li class="summary-item"><span class="label"><i data-lucide="code-2"></i>コード</span><span class="count">7</span></li>
-                            <li class="summary-item"><span class="label"><i data-lucide="award"></i>受賞</span><span class="count">5</span></li>
+                            <li class="summary-item"><span class="label"><i data-lucide="search"></i>研究テーマ</span><span class="count">1</span></li>
+                            <li class="summary-item"><span class="label"><i data-lucide="presentation"></i>学会発表</span><span class="count">1</span></li>
+                            <li class="summary-item"><span class="label"><i data-lucide="book"></i>読書記録</span><span class="count">19</span></li>
+                            <li class="summary-item"><span class="label"><i data-lucide="award"></i>受賞</span><span class="count">0</span></li>
                         </ul>
                     </div>
                 </aside>
@@ -594,28 +745,54 @@
                 });
             });
 
-
-            // --- General View Logic (unchanged) ---
+            // --- General View Logic ---
             const bookCards = document.querySelectorAll('.bookshelf-grid .book-card');
             const filterGroups = document.querySelectorAll('.bookshelf-filters .filter-group');
-            let activeFilters = { category: 'all', type: 'all', year: 'all' };
-            const genreColors = { 'all': { main: '#0074D9', sub: '#2ECC40', text: '#0A192F' }, 'data-assimilation': { main: '#FF4136', sub: '#FFDC00', text: '#4B0082' }, 'meteorology': { main: '#007BA7', sub: '#76D7C4', text: '#0A192F' }, 'numerical-weather': { main: '#FF8C00', sub: '#FFD700', text: '#6A0572' }, 'fluid-dynamics': { main: '#8A2BE2', sub: '#FF69B4', text: '#2F4F4F' }, 'book': { main: '#3D9970', sub: '#FF851B', text: '#2F4F4F' }, 'paper': { main: '#B10DC9', sub: '#001F3F', text: '#696969' }, '2025': { main: '#00BFFF', sub: '#1E90FF', text: '#0A192F' }, '2024': { main: '#3CB371', sub: '#6B8E23', text: '#2F4F4F' }, '2023': { main: '#FFD700', sub: '#FFA500', text: '#6A0572' }, 'older': { main: '#8B0000', sub: '#A52A2A', text: '#556B2F' } };
-            const categoryNames = { 'data-assimilation': 'データ同化', 'meteorology': '気象力学', 'numerical-weather': '数値予報', 'fluid-dynamics': '流体力学' };
-            const applyTheme = (theme) => { document.body.style.setProperty('--theme-main-color', theme.main); document.body.style.setProperty('--theme-sub-color', theme.sub); document.body.style.setProperty('--theme-text-color', theme.text); };
-            const updateBookshelf = () => { bookCards.forEach(card => { const isCategoryMatch = (activeFilters.category === 'all' || activeFilters.category === card.dataset.category); const isTypeMatch = (activeFilters.type === 'all' || activeFilters.type === card.dataset.type); const isYearMatch = (activeFilters.year === 'all' || activeFilters.year === card.dataset.year); card.classList.toggle('hidden', !(isCategoryMatch && isTypeMatch && isYearMatch)); }); };
-            filterGroups.forEach(group => { group.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') { group.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active')); e.target.classList.add('active'); const filterKey = Object.keys(e.target.dataset)[0].replace('filter', '').toLowerCase(); activeFilters[filterKey] = e.target.dataset[`filter${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`]; const newTheme = genreColors[activeFilters.category] || genreColors['all']; applyTheme(newTheme); updateBookshelf(); } }); });
-            const generateInterestTimeline = () => {
-                const timelineContainer = document.querySelector('.timeline-nodes'); if (!timelineContainer) return;
-                const timelineData = {};
-                bookCards.forEach(card => { const { year, category } = card.dataset; const coverSrc = card.querySelector('img.cover').src; if (!timelineData[year]) timelineData[year] = { categories: {}, covers: [] }; timelineData[year].categories[category] = (timelineData[year].categories[category] || 0) + 1; if (timelineData[year].covers.length < 3) timelineData[year].covers.push(coverSrc); });
-                const sortedYears = Object.keys(timelineData).sort((a, b) => a.localeCompare(b));
-                timelineContainer.innerHTML = '';
-                sortedYears.forEach(year => { const yearData = timelineData[year]; const node = document.createElement('div'); node.className = 'timeline-node'; const topCategories = Object.entries(yearData.categories).sort(([, a], [, b]) => b - a).slice(0, 2).map(([cat]) => cat); const popupKeywords = topCategories.map(cat => `<li class="keyword-tag" style="background-color: ${(genreColors[cat] || {}).main || '#ccc'}; color: #fff;">${categoryNames[cat] || cat}</li>`).join(''); const popupCovers = yearData.covers.map(src => `<img src="${src}" alt="Book Cover">`).join(''); node.innerHTML = ` <div class="year-label">${year === 'older' ? '~2022' : year}</div> <div class="timeline-popup"> <h4>${year === 'older' ? '~2022' : year}年の主な関心</h4> <ul class="keyword-list">${popupKeywords}</ul> <div class="popup-covers">${popupCovers}</div> </div>`; timelineContainer.appendChild(node); });
+            let activeFilters = { category: 'all', year: 'all' };
+            
+            const genreColors = {
+                'all': { main: '#0074D9', sub: '#2ECC40', text: '#0A192F' },
+                'control-theory': { main: '#8B4513', sub: '#DEB887', text: '#0A192F' },
+                'system-identification': { main: '#4169E1', sub: '#87CEEB', text: '#0A192F' },
+                'mathematics': { main: '#32CD32', sub: '#98FB98', text: '#0A192F' },
+                'data-analysis': { main: '#FF6347', sub: '#FFA07A', text: '#0A192F' },
+                '2025': { main: '#00BFFF', sub: '#1E90FF', text: '#0A192F' },
+                '2024': { main: '#3CB371', sub: '#6B8E23', text: '#2F4F4F' }
             };
+
+            const applyTheme = (theme) => {
+                document.body.style.setProperty('--theme-main-color', theme.main);
+                document.body.style.setProperty('--theme-sub-color', theme.sub);
+                document.body.style.setProperty('--theme-text-color', theme.text);
+            };
+
+            const updateBookshelf = () => {
+                bookCards.forEach(card => {
+                    const isCategoryMatch = (activeFilters.category === 'all' || activeFilters.category === card.dataset.category);
+                    const isYearMatch = (activeFilters.year === 'all' || activeFilters.year === card.dataset.year);
+                    card.classList.toggle('hidden', !(isCategoryMatch && isYearMatch));
+                });
+            };
+
+            filterGroups.forEach(group => {
+                group.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'BUTTON') {
+                        group.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        
+                        const filterKey = Object.keys(e.target.dataset)[0].replace('filter', '').toLowerCase();
+                        activeFilters[filterKey] = e.target.dataset[`filter${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`];
+                        
+                        const newTheme = genreColors[activeFilters.category] || genreColors['all'];
+                        applyTheme(newTheme);
+                        updateBookshelf();
+                    }
+                });
+            });
 
             // Initial setup
             updateBookshelf();
-            generateInterestTimeline();
+
             // --- AI Chat Popup Logic ---
             const triggerBtn = document.getElementById('chat-trigger-btn');
             const popupOverlay = document.getElementById('chat-popup-overlay');
@@ -634,14 +811,16 @@
                 triggerBtn.classList.remove('hidden');
             }
 
-            triggerBtn.addEventListener('click', openChat);
-            closeBtn.addEventListener('click', closeChat);
+            if (triggerBtn) triggerBtn.addEventListener('click', openChat);
+            if (closeBtn) closeBtn.addEventListener('click', closeChat);
 
-            popupOverlay.addEventListener('click', (e) => {
-                if (e.target === popupOverlay) {
-                    closeChat();
-                }
-            });
+            if (popupOverlay) {
+                popupOverlay.addEventListener('click', (e) => {
+                    if (e.target === popupOverlay) {
+                        closeChat();
+                    }
+                });
+            }
 
             function handleUserMessage() {
                 const messageText = userInput.value.trim();
@@ -651,32 +830,36 @@
                 generateAiResponse(messageText);
             }
 
-            sendBtn.addEventListener('click', handleUserMessage);
-            userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleUserMessage();
-            });
+            if (sendBtn) sendBtn.addEventListener('click', handleUserMessage);
+            if (userInput) {
+                userInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') handleUserMessage();
+                });
+            }
 
             function appendChatMessage(text, sender) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', `${sender}-message`);
                 let avatarContent = (sender === 'ai') 
                     ? '<i data-lucide="bot"></i>' 
-                    : '<img src="https://www.u-tokyo.ac.jp/content/400002137.jpg" style="object-fit:cover;">';
+                    : '<img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" style="object-fit:cover;">';
                 messageDiv.innerHTML = `
                     <div class="avatar">${avatarContent}</div>
                     <div class="message-content"><p>${text}</p></div>
                 `;
-                chatWindow.appendChild(messageDiv);
-                lucide.createIcons({ nodes: [messageDiv.querySelector('.avatar')] });
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+                if (chatWindow) {
+                    chatWindow.appendChild(messageDiv);
+                    lucide.createIcons({ nodes: [messageDiv.querySelector('.avatar')] });
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                }
             }
 
             function generateAiResponse(userText) {
                 let responseText = "申し訳ありません、よく分かりません。";
-                if (userText.includes('論文')) {
-                    responseText = "「データ同化」に関する最新の論文ですね。承知いたしました。データベースを検索します。";
-                } else if (userText.includes('研究者')) {
-                    responseText = "共同研究者をお探しですね。あなたの専門分野に合った方をおすすめします。";
+                if (userText.includes('制御') || userText.includes('システム同定')) {
+                    responseText = "制御理論やシステム同定に関する質問ですね。どのような文献をお探しでしょうか？";
+                } else if (userText.includes('研究')) {
+                    responseText = "研究に関するご質問ですね。修士研究のテーマについてお手伝いできることがあります。";
                 }
                 setTimeout(() => {
                     appendChatMessage(responseText, 'ai');
@@ -696,11 +879,11 @@
             switch(selectedUser) {
                 case 'yohei':
                     userAvatar.src = 'https://www.u-tokyo.ac.jp/content/400002137.jpg';
-                    // Already on this page, so no redirect needed
+                    window.location.href = 'mypage.html';
                     break;
                 case 'amane':
                     userAvatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
-                    window.location.href = 'mypage_amane.html';
+                    // Already on this page, so no redirect needed
                     break;
                 default:
                     userAvatar.src = 'https://via.placeholder.com/30x30';
@@ -709,6 +892,7 @@
             }
         }
     </script>
+    
     <!-- Chat Trigger Button -->
     <button id="chat-trigger-btn" aria-label="AIチャットを開く">
         <i data-lucide="bot"></i>
@@ -727,7 +911,7 @@
                 <div class="message ai-message">
                     <div class="avatar"><i data-lucide="bot"></i></div>
                     <div class="message-content">
-                        <p>こんにちは。どのような情報をお探しですか？</p>
+                        <p>こんにちは、Amaneさん。どのような情報をお探しですか？</p>
                     </div>
                 </div>
             </div>

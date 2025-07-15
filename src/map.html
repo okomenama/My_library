@@ -47,6 +47,7 @@
             box-shadow: var(--shadow-light);
             text-align: center;
             z-index: 20;
+            position: relative;
         }
         .global-header h1 {
             font-family: 'Playfair Display', serif;
@@ -59,6 +60,58 @@
             font-size: 0.95rem;
             color: var(--sub-text-color);
             margin-top: 5px;
+        }
+
+        /* --- User Selection Header --- */
+        .user-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom-left-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .user-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-selector label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .user-dropdown {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .user-dropdown:hover, .user-dropdown:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.2);
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            margin-left: 10px;
         }
 
         /* --- Map Container --- */
@@ -360,6 +413,18 @@
         <p>東京大学の知の拠点をデジタルで繋ぐ</p>
     </header>
 
+    <div class="user-header">
+        <div class="user-selector">
+            <label for="user-select">ユーザー:</label>
+            <select id="user-select" class="user-dropdown" onchange="switchUser()">
+                <option value="default">デフォルトユーザー</option>
+                <option value="yohei">Yohei Sawada (准教授)</option>
+                <option value="amane">Amane Kubo (M2学生)</option>
+            </select>
+            <img id="user-avatar" src="https://via.placeholder.com/30x30" alt="User Avatar" class="user-avatar">
+        </div>
+    </div>
+
     <div class="map-container">
         <svg class="map-svg-overlay" viewBox="0 0 1400 900">
             <defs>
@@ -589,6 +654,36 @@
             document.querySelector('.map-container').style.transform = 'scale(1)';
             updateSvgPaths(); // 初回ロード時にSVGパスを正確に描画
             updateLineActivity(); // 初期表示時にも一度更新
+        });
+        
+        // User switching functionality
+        function switchUser() {
+            const userSelect = document.getElementById('user-select');
+            const userAvatar = document.getElementById('user-avatar');
+            const selectedUser = userSelect.value;
+            
+            // Update avatar and redirect to appropriate page
+            switch(selectedUser) {
+                case 'yohei':
+                    userAvatar.src = 'https://www.u-tokyo.ac.jp/content/400002137.jpg';
+                    window.location.href = 'mypage.html';
+                    break;
+                case 'amane':
+                    userAvatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
+                    window.location.href = 'mypage_amane.html';
+                    break;
+                default:
+                    userAvatar.src = 'https://via.placeholder.com/30x30';
+                    break;
+            }
+        }
+
+        // Initialize avatar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const userAvatar = document.getElementById('user-avatar');
+            if (userAvatar) {
+                userAvatar.src = 'https://via.placeholder.com/30x30';
+            }
         });
     </script>
 </body>

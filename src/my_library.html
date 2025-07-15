@@ -18,12 +18,65 @@
             --accent-gradient: linear-gradient(90deg, #FF851B, #E100FF); 
         }
 
+        /* --- User Selection Header --- */
+        .user-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom-left-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .user-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-selector label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .user-dropdown {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .user-dropdown:hover, .user-dropdown:focus {
+            border-color: #FF851B;
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 133, 27, 0.2);
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #FF851B;
+            margin-left: 10px;
+        }
+
         body {
             margin: 0;
             font-family: 'Noto Sans JP', sans-serif;
             background-color: var(--off-white);
             color: var(--text-color);
             line-height: 1.8;
+            padding-top: 70px; /* Space for fixed header */
         }
 
         /* --- セクション共通のスタイル --- */
@@ -193,8 +246,21 @@
     </style>
 </head>
 <body>
+    <!-- User Selection Header -->
+    <div class="user-header">
+        <div class="user-selector">
+            <label for="user-select">ユーザー:</label>
+            <select id="user-select" class="user-dropdown" onchange="switchUser()">
+                <option value="default">デフォルトユーザー</option>
+                <option value="yohei">Yohei Sawada (准教授)</option>
+                <option value="amane">Amane Kubo (M2学生)</option>
+            </select>
+            <img id="user-avatar" src="https://via.placeholder.com/30x30" alt="User Avatar" class="user-avatar">
+        </div>
+    </div>
 
-    <header class="hero-section">
+    <!-- 段落のある動きのあるHero Section -->
+    <section class="hero-section">
         <div class="hero-content">
             <h1>あなたの<span class="text-gradient">知性</span>を、ポートフォリオに。</h1>
             <p>
@@ -203,7 +269,7 @@
             </p>
             <a href="#" class="cta-button">無料でポートフォリオを作成</a>
         </div>
-    </header>
+    </section>
 
     <main>
         <section class="problem-section">
@@ -249,3 +315,33 @@
 
 </body>
 </html>
+
+<script>
+// User switching functionality
+function switchUser() {
+    const userSelect = document.getElementById('user-select');
+    const userAvatar = document.getElementById('user-avatar');
+    const selectedUser = userSelect.value;
+    
+    // Update avatar and redirect to appropriate page
+    switch(selectedUser) {
+        case 'yohei':
+            userAvatar.src = 'https://www.u-tokyo.ac.jp/content/400002137.jpg';
+            window.location.href = 'mypage.html';
+            break;
+        case 'amane':
+            userAvatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
+            window.location.href = 'mypage_amane.html';
+            break;
+        default:
+            userAvatar.src = 'https://via.placeholder.com/30x30';
+            break;
+    }
+}
+
+// Initialize avatar on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const userAvatar = document.getElementById('user-avatar');
+    userAvatar.src = 'https://via.placeholder.com/30x30';
+});
+</script>
