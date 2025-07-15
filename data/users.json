@@ -1,0 +1,461 @@
+{
+  "users": [
+    {
+      "id": "yohei",
+      "name": "Yohei Sawada",
+      "nameJa": "澤田 洋平",
+      "position": "東京大学 大学院工学系研究科 准教授",
+      "avatar": "https://www.u-tokyo.ac.jp/content/400002137.jpg",
+      "email": "yohei.sawada@example.com",
+      "specializations": [
+        "気象力学",
+        "データ同化",
+        "数値予報"
+      ],
+      "stats": {
+        "totalBooks": 121,
+        "thisYearBooks": 15,
+        "publications": 32,
+        "presentations": 58,
+        "datasets": 4,
+        "coderepos": 7,
+        "awards": 5
+      },
+      "currentReading": {
+        "title": "Atmospheric Modeling, Data Assimilation and Predictability",
+        "author": "Eugenia Kalnay",
+        "cover": "https://images-na.ssl-images-amazon.com/images/I/4163g1b4wYL._SX331_BO1,204,203,200_.jpg",
+        "progress": 0.4
+      },
+      "readingHistory": [
+        {
+          "title": "Data Assimilation: Methods, Observations and Applications",
+          "author": "Geir Evensen",
+          "category": "data-assimilation",
+          "year": "2025",
+          "rating": 5,
+          "cover": "https://m.media-amazon.com/images/I/71oD415Jk8L._AC_UF1000,1000_QL80_.jpg"
+        },
+        {
+          "title": "An Introduction to Dynamic Meteorology",
+          "author": "James R. Holton",
+          "category": "meteorology",
+          "year": "2024",
+          "rating": 5,
+          "cover": "https://m.media-amazon.com/images/I/51IY619A-WL._AC_UF1000,1000_QL80_.jpg"
+        }
+      ],
+      "networkConnections": [
+        "amane",
+        "system_id_researcher_1",
+        "meteorology_expert_1"
+      ]
+    },
+    {
+      "id": "amane",
+      "name": "Amane Kubo",
+      "nameJa": "久保 周",
+      "position": "東京大学 大学院工学系研究科 M2",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+      "email": "amane.kubo@example.com",
+      "specializations": [
+        "制御理論",
+        "システム同定",
+        "数学・統計",
+        "データ解析"
+      ],
+      "stats": {
+        "totalBooks": 19,
+        "thisYearBooks": 8,
+        "publications": 0,
+        "presentations": 1,
+        "datasets": 0,
+        "coderepos": 2,
+        "awards": 0
+      },
+      "currentReading": {
+        "title": "システム同定入門",
+        "author": "片山徹著",
+        "cover": "https://m.media-amazon.com/images/I/51nI8E7ovaL.jpg",
+        "progress": 0.7
+      },
+      "readingHistory": [
+        {
+          "title": "システム同定入門",
+          "author": "片山徹著",
+          "category": "system-identification",
+          "year": "2025",
+          "rating": 5,
+          "cover": "https://m.media-amazon.com/images/I/51nI8E7ovaL.jpg"
+        },
+        {
+          "title": "システム同定 : 部分空間法からのアプローチ",
+          "author": "片山徹著",
+          "category": "system-identification",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://m.media-amazon.com/images/I/51ky+b2NQKL.jpg"
+        },
+        {
+          "title": "確率システムにおける制御理論",
+          "author": "向谷博明著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://m.media-amazon.com/images/I/41Ue8r7FGFL.jpg"
+        },
+        {
+          "title": "ロバスト制御",
+          "author": "藤森篤著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 5,
+          "cover": "https://m.media-amazon.com/images/I/51EjVlV4+6L.jpg"
+        },
+        {
+          "title": "非線形システム制御論",
+          "author": "島公脩 [ほか] 共著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://m.media-amazon.com/images/I/51H1Z9FQrDL.jpg"
+        },
+        {
+          "title": "非線形最適制御入門",
+          "author": "大塚敏之著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 5,
+          "cover": "https://m.media-amazon.com/images/I/51vQy2V5Z1L.jpg"
+        },
+        {
+          "title": "位相的データ解析から構造発見へ",
+          "author": "池祐一 [ほか] 共著",
+          "category": "data-analysis",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://m.media-amazon.com/images/I/51ZxQyD5YjL.jpg"
+        },
+        {
+          "title": "代数幾何学入門",
+          "author": "永井保成著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 3,
+          "cover": "https://m.media-amazon.com/images/I/51RR+jZ-bfL.jpg"
+        },
+        {
+          "title": "統計力学",
+          "author": "阿部龍蔵著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://m.media-amazon.com/images/I/51WBzP3PELL.jpg"
+        }
+      ],
+      "networkConnections": [
+        "yohei",
+        "control_theory_student_1",
+        "system_id_researcher_2"
+      ]
+    },
+    {
+      "id": "amane_kubo",
+      "name": "Amane Kubo",
+      "nameJa": "Amane Kubo",
+      "position": "大学院生",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+      "email": "amane_kubo@example.com",
+      "specializations": [
+        "制御理論",
+        "数学・統計",
+        "システム同定",
+        "データ解析"
+      ],
+      "stats": {
+        "totalBooks": 9,
+        "thisYearBooks": 12,
+        "publications": 0,
+        "presentations": 0,
+        "datasets": 0,
+        "coderepos": 1,
+        "awards": 0
+      },
+      "currentReading": {
+        "title": "システム同定入門",
+        "author": "片山徹著 ; システム制御情報学会編",
+        "category": "control-theory",
+        "year": "2025",
+        "rating": 4,
+        "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover",
+        "progress": 0.7
+      },
+      "readingHistory": [
+        {
+          "title": "システム同定入門",
+          "author": "片山徹著 ; システム制御情報学会編",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover",
+          "progress": 0.7
+        },
+        {
+          "title": "システム同定 : 部分空間法からのアプローチ",
+          "author": "片山徹著",
+          "category": "system-identification",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "確率システムにおける制御理論",
+          "author": "向谷博明著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "ロバスト制御",
+          "author": "藤森篤著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "非線形システム制御論",
+          "author": "島公脩 [ほか] 共著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "非線形最適制御入門",
+          "author": "大塚敏之著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "位相的データ解析から構造発見へ : パーシステントホモロジーを中心に",
+          "author": "池祐一 [ほか] 共著",
+          "category": "data-analysis",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "代数幾何学入門 : 代数学の基礎を出発点として",
+          "author": "永井保成著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "統計力学",
+          "author": "阿部龍蔵著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        }
+      ],
+      "networkConnections": []
+    },
+    {
+      "id": "amane_test",
+      "name": "Amane Kubo (Auto-generated)",
+      "nameJa": "Amane Kubo (Auto-generated)",
+      "position": "東京大学 大学院工学系研究科 M2 (自動生成)",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+      "email": "amane_test@example.com",
+      "specializations": [
+        "制御理論",
+        "数学・統計",
+        "システム同定",
+        "データ解析"
+      ],
+      "stats": {
+        "totalBooks": 9,
+        "thisYearBooks": 12,
+        "publications": 0,
+        "presentations": 0,
+        "datasets": 0,
+        "coderepos": 1,
+        "awards": 0
+      },
+      "currentReading": {
+        "title": "システム同定入門",
+        "author": "片山徹著 ; システム制御情報学会編",
+        "category": "control-theory",
+        "year": "2025",
+        "rating": 4,
+        "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover",
+        "progress": 0.7
+      },
+      "readingHistory": [
+        {
+          "title": "システム同定入門",
+          "author": "片山徹著 ; システム制御情報学会編",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover",
+          "progress": 0.7
+        },
+        {
+          "title": "システム同定 : 部分空間法からのアプローチ",
+          "author": "片山徹著",
+          "category": "system-identification",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "確率システムにおける制御理論",
+          "author": "向谷博明著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "ロバスト制御",
+          "author": "藤森篤著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "非線形システム制御論",
+          "author": "島公脩 [ほか] 共著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "非線形最適制御入門",
+          "author": "大塚敏之著",
+          "category": "control-theory",
+          "year": "2025",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "位相的データ解析から構造発見へ : パーシステントホモロジーを中心に",
+          "author": "池祐一 [ほか] 共著",
+          "category": "data-analysis",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "代数幾何学入門 : 代数学の基礎を出発点として",
+          "author": "永井保成著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        },
+        {
+          "title": "統計力学",
+          "author": "阿部龍蔵著",
+          "category": "mathematics",
+          "year": "2024",
+          "rating": 4,
+          "cover": "https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover"
+        }
+      ],
+      "networkConnections": []
+    }
+  ],
+  "categories": {
+    "control-theory": {
+      "name": "制御理論",
+      "color": "#8B4513",
+      "description": "システム制御、ロバスト制御、最適制御など"
+    },
+    "system-identification": {
+      "name": "システム同定",
+      "color": "#4169E1",
+      "description": "部分空間法、パラメータ推定、モデリングなど"
+    },
+    "data-assimilation": {
+      "name": "データ同化",
+      "color": "#FF4136",
+      "description": "観測データとモデルの融合手法"
+    },
+    "meteorology": {
+      "name": "気象力学",
+      "color": "#007BA7",
+      "description": "大気力学、数値予報、気象モデルなど"
+    },
+    "numerical-weather": {
+      "name": "数値予報",
+      "color": "#FF8C00",
+      "description": "気象予測、数値モデル、予報システムなど"
+    },
+    "fluid-dynamics": {
+      "name": "流体力学",
+      "color": "#8A2BE2",
+      "description": "流体の運動、非線形動力学など"
+    },
+    "mathematics": {
+      "name": "数学・統計",
+      "color": "#32CD32",
+      "description": "統計学、代数、幾何学など"
+    },
+    "data-analysis": {
+      "name": "データ解析",
+      "color": "#FF6347",
+      "description": "データマイニング、位相的データ解析など"
+    }
+  },
+  "network": {
+    "nodes": [
+      {
+        "id": "amane_kubo",
+        "label": "Amane Kubo",
+        "name": "Amane Kubo",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+        "group": "student",
+        "field": "制御理論, 数学・統計"
+      },
+      {
+        "id": "amane_test",
+        "label": "Amane Kubo (Auto-generated)",
+        "name": "Amane Kubo (Auto-generated)",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+        "group": "student",
+        "field": "制御理論, 数学・統計"
+      }
+    ],
+    "edges": [
+      {
+        "from": "amane_kubo",
+        "to": "amane",
+        "label": "共通分野: 制御理論, データ解析",
+        "strength": 4
+      },
+      {
+        "from": "amane_test",
+        "to": "amane",
+        "label": "共通分野: システム同定, 数学・統計",
+        "strength": 4
+      },
+      {
+        "from": "amane_test",
+        "to": "amane_kubo",
+        "label": "共通分野: システム同定, 数学・統計",
+        "strength": 4
+      }
+    ]
+  }
+}

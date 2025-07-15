@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイライブラリ - Amane Kubo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        /* CSS styles from mypage_amane.html would go here */
+        /* [CSS content truncated for brevity] */
+    </style>
+</head>
+<body>
+    <div class="user-header">
+        <div class="user-selector">
+            <label for="user-select">ユーザー:</label>
+            <select id="user-select" class="user-dropdown" onchange="switchUser()">
+                <option value="amane_kubo" selected>Amane Kubo</option>
+                <option value="yohei">Yohei Sawada (准教授)</option>
+                <option value="default">デフォルトユーザー</option>
+            </select>
+            <img id="user-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" alt="User Avatar" class="user-avatar">
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <header class="page-header">
+            <h1 id="page-title">マイライブラリ</h1>
+            <div class="mode-switcher">
+                <button class="mode-btn active" id="general-mode-btn">
+                    <i data-lucide="library"></i>
+                    <span>一般モード</span>
+                </button>
+                <button class="mode-btn" id="research-mode-btn">
+                    <i data-lucide="flask-conical"></i>
+                    <span>研究モード</span>
+                </button>
+                <button class="mode-btn" id="network-mode-btn" onclick="location.href='network_graph.html'">
+                    <i data-lucide="network"></i>
+                    <span>ネットワーク</span>
+                </button>
+            </div>
+        </header>
+
+        <header class="profile-header">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face" alt="User Avatar" class="avatar">
+            <div class="user-info">
+                <h2>Amane Kubo</h2>
+                <p>大学院生</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item"><div class="number">9</div><div class="label">総文献数</div></div>
+                <div class="stat-item"><div class="number">12</div><div class="label">今年の文献数</div></div>
+            </div>
+        </header>
+
+        <div id="view-wrapper">
+            <div id="general-view">
+                <aside class="stats-sidebar">
+                    <div class="stats-widget">
+                        <h3>月間読書グラフ (2025年)</h3>
+                        <div class="bar-chart">
+                            <div class="bar" style="height: 20%;" data-value="1冊"></div><div class="bar" style="height: 40%;" data-value="2冊"></div><div class="bar" style="height: 60%;" data-value="3冊"></div><div class="bar" style="height: 80%;" data-value="4冊"></div><div class="bar" style="height: 100%;" data-value="5冊"></div><div class="bar" style="height: 100%;" data-value="5冊"></div>
+                        </div>
+                    </div>
+                    <div class="stats-widget">
+                        <h3>専門分野</h3>
+                        <div class="donut-chart" style="background: conic-gradient(#8B4513 0% 56%, #4169E1 56% 67%, #FF6347 67% 78%, #32CD32 78% 100%);"></div>
+                        <ul class="legend-list">
+                            <li><span class="legend-color-box" style="background-color: #8B4513;"></span> 制御理論 (56%)</li>
+                            <li><span class="legend-color-box" style="background-color: #4169E1;"></span> システム同定 (11%)</li>
+                            <li><span class="legend-color-box" style="background-color: #FF6347;"></span> データ解析 (11%)</li>
+                            <li><span class="legend-color-box" style="background-color: #32CD32;"></span> 数学・統計 (22%)</li>
+                        </ul>
+                    </div>
+                </aside>
+                <main class="main-library">
+                    <section class="section-card currently-reading">
+                        <h2>今読んでいる文献</h2>
+                        <div class="progress-book">
+                            <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book cover">
+                            <div class="progress-details">
+                                <h4>システム同定入門</h4>
+                                <p>片山徹著 ; システム制御情報学会編</p>
+                                <div class="progress-bar-bg"><div class="progress-bar-fg" style="width: 70%;"></div></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="bookshelf">
+                        <div class="bookshelf-grid">
+                            
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>システム同定入門</h4>
+                                    <p>片山徹著 ; システム制御情報学会編</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="system-identification" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>システム同定 : 部分空間法からのアプローチ</h4>
+                                    <p>片山徹著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>確率システムにおける制御理論</h4>
+                                    <p>向谷博明著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>ロバスト制御</h4>
+                                    <p>藤森篤著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>非線形システム制御論</h4>
+                                    <p>島公脩 [ほか] 共著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="control-theory" data-year="2025">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>非線形最適制御入門</h4>
+                                    <p>大塚敏之著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="data-analysis" data-year="2024">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>位相的データ解析から構造発見へ : パーシステントホモロジーを中心に</h4>
+                                    <p>池祐一 [ほか] 共著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="mathematics" data-year="2024">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>代数幾何学入門 : 代数学の基礎を出発点として</h4>
+                                    <p>永井保成著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                            <div class="book-card" data-category="mathematics" data-year="2024">
+                                <img src="https://via.placeholder.com/240x360/f0f0f0/666?text=Book+Cover" alt="Book Cover" class="cover">
+                                <div class="book-info">
+                                    <h4>統計力学</h4>
+                                    <p>阿部龍蔵著</p>
+                                    <div class="rating">★★★★☆</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/user_manager.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

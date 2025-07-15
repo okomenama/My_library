@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="js/user_manager.js"></script>
     
     <style>
         :root {
@@ -250,7 +251,7 @@
         <div id="profile-modal-content" class="profile-modal"></div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('general-mode-btn').addEventListener('click', () => { window.location.href = 'mypage.html'; });
             document.getElementById('research-mode-btn').addEventListener('click', () => { window.location.href = 'mypage.html'; });
 
@@ -264,23 +265,26 @@
             const modalContent = document.getElementById('profile-modal-content');
             let network = null;
 
+            // ユーザーマネージャーの初期化を待ってからデータを読み込み
+            if (window.userManager) {
+                await window.userManager.init();
+                await loadNetworkData();
+            } else {
+                await loadNetworkData();
+            }
+
             const facultyColors = {
                 science: { background: '#D6E6FF', border: '#4285F4' },
                 frontier: { background: '#D3F1DF', border: '#34A853' },
                 info_sci: { background: '#FEF6D0', border: '#FBBC04' },
                 engineering: { background: '#FADADD', border: '#EA4335' }
             };
-            const peopleData = [
-                { id: 1, label: 'You', group: 'user', title: 'あなた' },
-                { id: 2, label: 'Ito Kenji', title: '教授', department: '理学系研究科', group: 'science', research: '機械学習, 統計物理', avatar: 'https://placehold.co/70x70/4285F4/fff?text=IK', match: 92 },
-                { id: 3, label: 'Sato Rie', title: '准教授', department: '新領域創成科学研究科', group: 'frontier', research: '複雑系科学, データ同化', avatar: 'https://placehold.co/70x70/34A853/fff?text=SR', match: 88 },
-                { id: 4, label: 'Tanaka Takeshi', title: '助教', department: '情報理工学系研究科', group: 'info_sci', research: '高性能計算, 数値予報', avatar: 'https://placehold.co/70x70/FBBC04/333?text=TT', match: 85 },
-                { id: 5, label: 'Suzuki Ichiro', title: '教授', department: '工学系研究科', group: 'engineering', research: '流体力学, シミュレーション', avatar: 'https://placehold.co/70x70/EA4335/fff?text=SI', match: 75 },
-                { id: 6, label: 'Emily White', title: 'Postdoc', department: '理学系研究科', group: 'science', research: '機械学習, 計算論的神経科学', avatar: 'https://placehold.co/70x70/4285F4/fff?text=EW', match: 78 }
-            ];
-            const edgeData = [ { from: 1, to: 2 }, { from: 1, to: 3 }, { from: 2, to: 6 }, { from: 3, to: 4 }, { from: 4, to: 5 }];
+            
+            // Network will be initialized from users.json via UserManager
 
             function populateListView() {
+                if (peopleData.length === 0) return;
+                
                 listViewContent.innerHTML = peopleData.filter(p => p.id !== 1).map(person => {
                     const color = facultyColors[person.group]?.border || '#ccc';
                     return `
@@ -299,6 +303,11 @@
             }
 
             function initGraph() {
+                if (peopleData.length === 0) {
+                    console.warn('No people data available for network graph');
+                    return;
+                }
+                
                 const nodes = new vis.DataSet(peopleData);
                 const edges = new vis.DataSet(edgeData);
                 const options = {
@@ -511,35 +520,203 @@
     </div>
 
     <script>
-        // User switching functionality
-        function switchUser() {
-            const userSelect = document.getElementById('user-select');
-            const userAvatar = document.getElementById('user-avatar');
-            const selectedUser = userSelect.value;
+        // Global variables for network data - now loaded dynamically from users.json
+        let peopleData = [];
+        let edgeData = [];
+        let network = null;
+
+        // Initialize network from user data
+        async function initNetworkFromUserData(usersData) {
+            if (!usersData || !usersData.network) {
+                console.warn('ネットワークデータがありません');
+                return;
+            }
+
+            // Convert users.json format to network graph format
+            peopleData = usersData.network.nodes.map(node => ({
+                id: node.id,
+                label: node.label || node.name,
+                image: node.avatar,
+                shape: 'circularImage',
+                size: 30,
+                group: node.group || 'student',
+                title: `${node.label || node.name}<br>${node.field || ''}`
+            }));
+
+            edgeData = usersData.network.edges.map(edge => ({
+                from: edge.from,
+                to: edge.to,
+                label: edge.label || '',
+                color: { color: '#999' },
+                width: 2
+            }));
+
+            console.log('✅ ネットワークデータを読み込みました:', { 
+                nodes: peopleData.length, 
+                edges: edgeData.length 
+            });
+
+            // Initialize the network graph
+            initializeNetworkGraph();
+        }
+
+        // Initialize the network graph with loaded data
+        function initializeNetworkGraph() {
+            if (peopleData.length === 0) {
+                console.warn('ネットワークデータが空です');
+                return;
+            }
+
+            const networkContainer = document.getElementById('network-graph');
+            if (!networkContainer) {
+                console.error('ネットワークコンテナが見つかりません');
+                return;
+            }
+
+            // Faculty colors (keep existing styling)
+            const facultyColors = {
+                science: { background: '#4CAF50', border: '#2E7D32' },
+                frontier: { background: '#FF9800', border: '#E65100' },
+                info_sci: { background: '#2196F3', border: '#0D47A1' },
+                engineering: { background: '#9C27B0', border: '#4A148C' }
+            };
+
+            const nodes = new vis.DataSet(peopleData);
+            const edges = new vis.DataSet(edgeData);
+
+            const options = {
+                nodes: {
+                    borderWidth: 2,
+                    shadow: true,
+                    font: { color: '#333', size: 14 }
+                },
+                edges: {
+                    color: { color: '#999', highlight: '#0074D9' },
+                    shadow: true,
+                    smooth: { enabled: false }
+                },
+                physics: {
+                    solver: 'barnesHut',
+                    barnesHut: { 
+                        gravitationalConstant: -10000, 
+                        centralGravity: 0.4, 
+                        springLength: 150, 
+                        springConstant: 0.05 
+                    },
+                    stabilization: { iterations: 200 }
+                },
+                interaction: { hover: true },
+                groups: {
+                    user: { color: { background: '#888888', border: '#424242' }, size: 25, font: { color: '#ffffff' } },
+                    student: { color: { background: '#2ECC40', border: '#27AE60' }, size: 25 },
+                    professor: { color: { background: '#0074D9', border: '#0056B3' }, size: 30 },
+                    science: { color: facultyColors.science },
+                    frontier: { color: facultyColors.frontier },
+                    info_sci: { color: facultyColors.info_sci },
+                    engineering: { color: facultyColors.engineering }
+                }
+            };
+
+            network = new vis.Network(networkContainer, { nodes, edges }, options);
             
-            // Update avatar and redirect to appropriate page
-            switch(selectedUser) {
-                case 'yohei':
-                    userAvatar.src = 'https://www.u-tokyo.ac.jp/content/400002137.jpg';
-                    window.location.href = 'mypage.html';
-                    break;
-                case 'amane':
-                    userAvatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face';
-                    window.location.href = 'mypage_amane.html';
-                    break;
-                default:
-                    userAvatar.src = 'https://via.placeholder.com/30x30';
-                    break;
+            // Node click event
+            network.on('click', function(params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    handleNodeClick(nodeId);
+                }
+            });
+
+            console.log('✅ ネットワークグラフを初期化しました');
+        }
+
+        // Handle node click
+        function handleNodeClick(nodeId) {
+            console.log('ノードがクリックされました:', nodeId);
+            
+            // Switch to the clicked user
+            if (typeof UserManager !== 'undefined') {
+                UserManager.switchUser(nodeId);
+                
+                // Navigate to user's mypage
+                const user = UserManager.getCurrentUser();
+                if (user) {
+                    const shouldNavigate = confirm(`${user.nameJa || user.name}のマイページに移動しますか？`);
+                    if (shouldNavigate) {
+                        window.location.href = `mypage_${nodeId}.html`;
+                    }
+                }
             }
         }
 
-        // Initialize avatar on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const userAvatar = document.getElementById('user-avatar');
-            if (userAvatar) {
-                userAvatar.src = 'https://via.placeholder.com/30x30';
+        // Filter graph by depth (existing functionality)
+        function filterGraphData(depth) {
+            if (!peopleData.length || !edgeData.length) return;
+
+            const userNodeId = peopleData[0].id; // Use first node as reference
+            let visibleNodeIds = new Set([userNodeId]);
+            let visibleEdgeIds = new Set();
+            
+            let currentFrontier = [userNodeId];
+            for (let i = 1; i <= depth; i++) {
+                let nextFrontier = [];
+                edgeData.forEach(edge => {
+                    if (currentFrontier.includes(edge.from) && !visibleNodeIds.has(edge.to)) {
+                        visibleNodeIds.add(edge.to);
+                        nextFrontier.push(edge.to);
+                        visibleEdgeIds.add(edge.id || `${edge.from}-${edge.to}`);
+                    } else if (currentFrontier.includes(edge.to) && !visibleNodeIds.has(edge.from)) {
+                        visibleNodeIds.add(edge.from);
+                        nextFrontier.push(edge.from);
+                        visibleEdgeIds.add(edge.id || `${edge.from}-${edge.to}`);
+                    }
+                });
+                currentFrontier = nextFrontier;
+            }
+
+            if (depth === 'all') {
+                peopleData.forEach(p => visibleNodeIds.add(p.id));
+                edgeData.forEach(e => visibleEdgeIds.add(e.id || `${e.from}-${e.to}`));
+            }
+            
+            const allEdges = new vis.DataSet(edgeData);
+            const filteredNodes = peopleData.filter(p => visibleNodeIds.has(p.id));
+            const filteredEdges = allEdges.get({ filter: edge => visibleNodeIds.has(edge.from) && visibleNodeIds.has(edge.to) });
+
+            if (network) {
+                network.setData({ nodes: new vis.DataSet(filteredNodes), edges: new vis.DataSet(filteredEdges) });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait for UserManager to load data
+            if (typeof UserManager !== 'undefined') {
+                // Check if data is already loaded
+                if (UserManager.isDataLoaded()) {
+                    await initNetworkFromUserData(UserManager.usersData);
+                } else {
+                    // Wait for data to load
+                    const checkDataLoaded = setInterval(() => {
+                        if (UserManager.isDataLoaded()) {
+                            clearInterval(checkDataLoaded);
+                            initNetworkFromUserData(UserManager.usersData);
+                        }
+                    }, 100);
+                }
+            } else {
+                console.error('UserManagerが見つかりません');
+            }
+
+            // Initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             }
         });
+
+        // Make functions available globally for button events
+        window.initNetworkFromUserData = initNetworkFromUserData;
+        window.filterGraphData = filterGraphData;
     </script>
 </body>
 </html>
