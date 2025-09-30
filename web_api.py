@@ -88,25 +88,15 @@ def update_progress(progress, message):
     log_message(message)
 
 @app.route('/')
-def admin_dashboard():
-    """管理画面のHTMLを返す"""
-    # admin_dashboard.htmlを読み込んで返す（相対パスで安全に）
-    try:
-        admin_html_path = SRC_FOLDER / 'admin_dashboard.html'
-        with open(admin_html_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    except FileNotFoundError:
-        return '''
-        <!DOCTYPE html>
-        <html>
-        <head><title>管理画面</title></head>
-        <body>
-            <h1>マイページ自動生成システム</h1>
-            <p>管理画面のHTMLファイルが見つかりません。</p>
-            <p>src/admin_dashboard.htmlを配置してください。</p>
-        </body>
-        </html>
-        '''
+def index():
+    """インデックスページ（admin_dashboard.html）を返す"""
+    return send_from_directory(SRC_FOLDER, 'admin_dashboard.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    """srcディレクトリ内の静的ファイル（HTMLなど）を提供"""
+    # 生成されたマイページもここに含まれる
+    return send_from_directory(SRC_FOLDER, filename)
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -176,8 +166,6 @@ def process_mypage_generation(tsv_path, user_id, user_name, position, email, ava
             '--position', position
         ]
         
-        if email:
-            cmd.extend(['--email', email])
         if avatar_url:
             cmd.extend(['--avatar', avatar_url])
         
@@ -249,6 +237,41 @@ def get_users():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/user/delete', methods=['POST'])
+def delete_user():
+    """ユーザー情報を削除する"""
+    data = request.get_json()
+    user_id_to_delete = data.get('user_id')
+
+    if not user_id_to_delete:
+        return jsonify({'error': 'ユーザーIDが指定されていません'}), 400
+
+    try:
+        # 1. users.jsonからユーザーを削除
+        users_json_file = DATA_FOLDER / 'users.json'
+        if users_json_file.exists():
+            with open(users_json_file, 'r+', encoding='utf-8') as f:
+                users_data = json.load(f)
+                initial_len = len(users_data['users'])
+                users_data['users'] = [u for u in users_data['users'] if u.get('id') != user_id_to_delete]
+                
+                if len(users_data['users']) < initial_len:
+                    f.seek(0)
+                    f.truncate()
+                    json.dump(users_data, f, indent=2, ensure_ascii=False)
+                else:
+                    return jsonify({'error': '指定されたユーザーが見つかりません'}), 404
+
+        # 2. 対応するマイページHTMLを削除
+        mypage_file = SRC_FOLDER / f'mypage_{user_id_to_delete}.html'
+        if mypage_file.exists():
+            os.remove(mypage_file)
+
+        return jsonify({'message': f'ユーザー {user_id_to_delete} を削除しました'}), 200
+
+    except Exception as e:
+        return jsonify({'error': f'削除処理中にエラーが発生しました: {str(e)}'}), 500
+
 @app.route('/api/reset', methods=['POST'])
 def reset_processing():
     """処理状況をリセット"""
@@ -271,5 +294,17 @@ if __name__ == '__main__':
     print("   - GET  /api/users:  ユーザー一覧取得")
     print("   - POST /api/reset:  処理状況リセット")
     print()
+    
+    app.run(debug=True, host='0.0.0.0', port=8080)
+    print("🚀 マイページ自動生成システム WebAPI を起動中...")
+    print("📝 管理画面: http://localhost:8080")
+    print("🔗 API エンドポイント:")
+    print("   - POST /api/upload: ファイルアップロード")
+    print("   - GET  /api/status: 処理状況取得")
+    print("   - GET  /api/users:  ユーザー一覧取得")
+    print("   - POST /api/reset:  処理状況リセット")
+    print()
+    
+    app.run(debug=True, host='0.0.0.0', port=8080)
     
     app.run(debug=True, host='0.0.0.0', port=8080)

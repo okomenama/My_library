@@ -435,6 +435,38 @@
         .container > * {
             animation: fadeInUp 0.6s ease-out forwards;
         }
+
+        /* コンテキストメニュー用のスタイル */
+        .context-menu {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 140px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            padding: 8px 0;
+            z-index: 1000;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        .context-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .context-menu ul li {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+        .context-menu ul li:hover {
+            background-color: var(--light-gray);
+        }
+        .context-menu ul li.delete {
+            color: var(--error-color);
+        }
     </style>
 </head>
 <body>
@@ -556,6 +588,16 @@
         </section>
     </div>
 
+    <!-- 右クリックメニューのHTML -->
+    <div id="context-menu" class="context-menu">
+        <ul>
+            <li id="delete-user-btn" class="delete">
+                <i data-lucide="trash-2" style="width:16px; height:16px;"></i>
+                <span>削除</span>
+            </li>
+        </ul>
+    </div>
+
     <script>
         class MyPageGenerator {
             constructor() {
@@ -581,6 +623,62 @@
                 
                 // Auto-generate user ID from name
                 document.getElementById('user-name').addEventListener('input', this.autoGenerateUserId.bind(this));
+            
+                this.initializeContextMenu();
+            }
+
+            initializeContextMenu() {
+                const usersGrid = document.getElementById('users-grid');
+                const contextMenu = document.getElementById('context-menu');
+                const deleteUserBtn = document.getElementById('delete-user-btn');
+                let currentUserId = null;
+
+                // ユーザーグリッドで右クリックされたときの処理
+                usersGrid.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    
+                    const userCard = e.target.closest('.user-card');
+                    if (userCard && userCard.dataset.userId) {
+                        currentUserId = userCard.dataset.userId;
+                        contextMenu.style.display = 'block';
+                        contextMenu.style.left = `${e.pageX}px`;
+                        contextMenu.style.top = `${e.pageY}px`;
+                        lucide.createIcons({
+                            nodes: [document.querySelector('#delete-user-btn i')]
+                        });
+                    }
+                });
+
+                // 画面クリックでコンテキストメニューを閉じる
+                document.addEventListener('click', () => {
+                    contextMenu.style.display = 'none';
+                    currentUserId = null;
+                });
+
+                // 削除ボタンがクリックされたときの処理
+                deleteUserBtn.addEventListener('click', async () => {
+                    if (!currentUserId) return;
+
+                    if (confirm(`本当にユーザーID: ${currentUserId} を削除しますか？\nこの操作は元に戻せません。`)) {
+                        try {
+                            const response = await fetch('/api/user/delete', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ user_id: currentUserId })
+                            });
+                            const result = await response.json();
+
+                            if (response.ok) {
+                                this.showAlert(result.message, 'success');
+                                this.loadExistingUsers(); // ユーザーリストを再読み込み
+                            } else {
+                                this.showAlert(`エラー: ${result.error}`, 'error');
+                            }
+                        } catch (error) {
+                            this.showAlert(`リクエストに失敗しました: ${error}`, 'error');
+                        }
+                    }
+                });
             }
 
             handleDragOver(e) {
@@ -866,6 +964,7 @@
             createUserCard(user) {
                 const card = document.createElement('div');
                 card.className = 'user-card';
+                card.dataset.userId = user.id; // 削除機能のためにユーザーIDをdata属性に設定
                 
                 card.innerHTML = `
                     <div class="user-header">

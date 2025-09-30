@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイライブラリ - {{ user_name }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+    <style>
+        /* [mypage_amane_kubo.htmlと同様のCSSをここに含めます] */
+        /* CSS content is omitted for brevity */
+    </style>
+</head>
+<body>
+    <div class="user-header">
+        <div class="user-selector">
+            <label for="user-select">ユーザー:</label>
+            <select id="user-select" class="user-dropdown" onchange="switchUser()">
+                {{ user_options }}
+            </select>
+            <img id="user-avatar" src="{{ avatar_url }}" alt="User Avatar" class="user-avatar">
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <header class="page-header">
+            <h1 id="page-title">マイライブラリ</h1>
+            <div class="mode-switcher">
+                <button class="mode-btn active" id="general-mode-btn">
+                    <i data-lucide="library"></i>
+                    <span>一般モード</span>
+                </button>
+                <button class="mode-btn" id="research-mode-btn">
+                    <i data-lucide="flask-conical"></i>
+                    <span>研究モード</span>
+                </button>
+                <button class="mode-btn" id="network-mode-btn" onclick="location.href='network.html'">
+                    <i data-lucide="network"></i>
+                    <span>ネットワーク</span>
+                </button>
+            </div>
+        </header>
+
+        <header class="profile-header">
+            <img src="{{ avatar_url }}" alt="User Avatar" class="avatar">
+            <div class="user-info">
+                <h2>{{ user_name }}</h2>
+                <p>{{ position }}</p>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item"><div class="number">{{ total_books }}</div><div class="label">総文献数</div></div>
+                <div class="stat-item"><div class="number">{{ books_this_year }}</div><div class="label">今年の文献数</div></div>
+            </div>
+        </header>
+
+        <div id="view-wrapper">
+            <div id="general-view">
+                <aside class="stats-sidebar">
+                    <div class="stats-widget">
+                        <h3>月間読書グラフ ({{ current_year }}年)</h3>
+                        <div class="bar-chart">
+                            {{ monthly_chart_bars }}
+                        </div>
+                    </div>
+                    <div class="stats-widget">
+                        <h3>専門分野</h3>
+                        <div class="donut-chart" style="background: {{ donut_chart_style }};"></div>
+                        <ul class="legend-list">
+                            {{ category_legend }}
+                        </ul>
+                    </div>
+                </aside>
+                <main class="main-library">
+                    <section class="section-card currently-reading">
+                        <h2>今読んでいる文献</h2>
+                        {{ currently_reading_book }}
+                    </section>
+                    <section class="bookshelf">
+                        <div class="bookshelf-grid">
+                            {{ book_cards }}
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/user_manager.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

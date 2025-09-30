@@ -26,7 +26,7 @@ cd library
 source .venv/bin/activate
 
 # Webサーバー起動
-python web_api.py
+python3 web_api.py
 ```
 
 ### 2. Web管理画面にアクセス
