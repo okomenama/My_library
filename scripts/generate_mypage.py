@@ -276,10 +276,7 @@ class MypageGenerator:
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
-    <style>
-        /* CSS styles from mypage_amane.html would go here */
-        /* [CSS content truncated for brevity] */
-    </style>
+    <link rel="stylesheet" href="../css/styles.css"> 
 </head>
 <body>
     <div class="user-header">
