@@ -268,12 +268,12 @@
       "networkConnections": []
     },
     {
-      "id": "amanekun",
-      "name": "久保　亘",
-      "nameJa": "久保　亘",
-      "position": "大学院生",
-      "avatar": "https://via.placeholder.com/90x90/A/fff?text=A",
-      "email": "amanekun@example.com",
+      "id": "naoki_hiura_ryota_yagi",
+      "name": "八木　直紀",
+      "nameJa": "八木　直紀",
+      "position": "教授",
+      "avatar": "https://via.placeholder.com/90x90/N/fff?text=N",
+      "email": "naoki_hiura_ryota_yagi@example.com",
       "specializations": [
         "制御理論",
         "数学・統計",
@@ -443,6 +443,14 @@
         "avatar": "https://via.placeholder.com/90x90/A/fff?text=A",
         "group": "student",
         "field": "制御理論, 数学・統計"
+      },
+      {
+        "id": "naoki_hiura_ryota_yagi",
+        "label": "八木　直紀",
+        "name": "八木　直紀",
+        "avatar": "https://via.placeholder.com/90x90/N/fff?text=N",
+        "group": "student",
+        "field": "制御理論, 数学・統計"
       }
     ],
     "edges": [
@@ -474,6 +482,18 @@
         "from": "amanekun",
         "to": "amane_kubo",
         "label": "共通分野: データ解析, 数学・統計",
+        "strength": 4
+      },
+      {
+        "from": "naoki_hiura_ryota_yagi",
+        "to": "amane",
+        "label": "共通分野: 制御理論, システム同定",
+        "strength": 4
+      },
+      {
+        "from": "naoki_hiura_ryota_yagi",
+        "to": "amane_kubo",
+        "label": "共通分野: 制御理論, システム同定",
         "strength": 4
       }
     ]
